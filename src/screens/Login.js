@@ -112,7 +112,14 @@ const Login = ({navigation}) => {
         AsyncStorage.setItem('dp', decodedToken.picture);
         AsyncStorage.setItem('address', decodedToken.address);
         AsyncStorage.setItem('email', decodedToken.email);
+
         AsyncStorage.setItem('id', decodedToken.id);
+        AsyncStorage.setItem('emergencyContact', decodedToken.emergencyContact);
+        AsyncStorage.setItem(
+          'ussuall_check_ins',
+          decodedToken.usuall_check_ins,
+        );
+        AsyncStorage.setItem('ussuall_pick_up', decodedToken.pickup_points);
         AsyncStorage.setItem('phone', decodedToken.phone.toString());
         // AsyncStorage.setItem('pickup_points', decodedToken.pickup_points);
 
@@ -122,7 +129,9 @@ const Login = ({navigation}) => {
           placement: 'top',
           description: 'Welcome' + ' ' + (await AsyncStorage.getItem('name')),
         });
-        navigation.navigate('Main');
+        navigation.navigate('Main', {
+          id: decodedToken.id,
+        });
       })
       .catch(error => {
         console.error(error);

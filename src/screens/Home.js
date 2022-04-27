@@ -1,5 +1,5 @@
 import {Box, Button} from 'native-base';
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,6 +14,10 @@ import AutoComplete from '../components/AutoComplete';
 import MapContainer from '../components/MapContainer/index';
 import Home from '../routes/Home/components/Home';
 import bg from '../assets/img/bg.jpg';
+import {useApiRequest} from '../services/Axios/AxiosGet';
+import {baseUrl} from '../config/baseURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 const styles = StyleSheet.create({
   page: {
     flex: 1,
@@ -88,6 +92,37 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen = ({navigation}) => {
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [tripData, setTripData] = useState('');
+  const logout = () => {
+    AsyncStorage.clear();
+    navigation.navigate('Login');
+  };
+  const getUserInfo = async () => {
+    let id = await AsyncStorage.getItem('id');
+    axios
+      .get(baseUrl + '/user/' + id)
+      .then(function (response) {
+        setTripData(response.data.rides[0]);
+
+        setFrom(response.data.rides[0].pickup_point);
+        setTo(response.data.rides[0].drop_off_location);
+        // handle success
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <View style={styles.homeContainer}>
       <MapView
@@ -116,22 +151,51 @@ const HomeScreen = ({navigation}) => {
             },
           ]}
           source={bg}>
-          <Text style={{fontWeight: 'bold', fontSize: 20, color: '#fff'}}>
-            Next Ride
-          </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 14, color: '#fff'}}>
-            From:
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 14,
-              color: '#fff',
-              marginBottom: 10,
-            }}>
-            To:
-          </Text>
-          <Button w="40%">Cancel</Button>
+          {tripData ? (
+            <>
+              <Text style={{fontWeight: 'bold', fontSize: 20, color: '#fff'}}>
+                Next Ride
+              </Text>
+              <Text style={{fontWeight: 'bold', fontSize: 14, color: '#fff'}}>
+                From: {from}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 14,
+                  color: '#fff',
+                  marginBottom: 10,
+                }}>
+                To: {to}
+              </Text>
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Button
+                  onPress={() =>
+                    navigation.navigate('Trip Details', {tripData})
+                  }>
+                  More Details
+                </Button>
+                <Button bg="amber.100" w="40%">
+                  Cancel
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Text
+              style={{
+                fontSize: 22,
+                color: '#fff',
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}>
+              No upcoming rides
+            </Text>
+          )}
         </ImageBackground>
       </Box>
       <Box
@@ -162,7 +226,7 @@ const HomeScreen = ({navigation}) => {
           Find Ride
         </Button>
         <Button
-          onPress={() => navigation.navigate('Login')}
+          onPress={logout}
           size="lg"
           style={styles.buttonStyle}
           leftIcon={<Icon name="cog-outline" type="Ionicons" color="white" />}

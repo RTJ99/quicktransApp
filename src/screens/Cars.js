@@ -7,14 +7,21 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {baseUrl} from '../config/baseURL';
 import {useApiRequest} from '../services/Axios/AxiosGet';
 import bg from '../assets/img/bg2.jpg';
 import pin from '../assets/carMarker.png';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+// import pin from '../assets/carMarker.png';
 
 const Cars = () => {
+  const [userData, setUserData] = useState([]);
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+
   const styles = StyleSheet.create({
     page: {
       backgroundColor: '#fff',
@@ -58,12 +65,40 @@ const Cars = () => {
       height: Dimensions.get('window').height,
     },
   });
+
+  const getUserInfo = async () => {
+    let id = await AsyncStorage.getItem('id');
+    axios
+      .get(baseUrl + '/user/' + id)
+      .then(function (response) {
+        // setUserData(response.data.rides[0]);
+
+        setTo(response.data.usuall_check_ins);
+        setFrom(response.data.pickup_points);
+        // handle success
+        console.log(response.data, 'Data');
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   const {
     data: cars,
     fetchData,
     error: errorsRequests,
     isLoaded: isLoadedRequests,
-  } = useApiRequest(baseUrl + `/offer-ride`);
+  } = useApiRequest(
+    baseUrl + `/offer-ride/search?pickup_point=${from}&drop_off_location=${to}`,
+  );
+  console.log(to, 'to');
+  console.log(from, 'from');
   const tokyoRegion = {
     latitude: 35.6762,
     longitude: 139.6503,
@@ -84,13 +119,46 @@ const Cars = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <Marker
-          image={pin}
-          coordinate={{
-            latitude: -17.824858,
-            longitude: 31.053028,
-          }}
-        />
+        {cars.map((car, index) => (
+          <>
+            <Marker
+              id={index}
+              onPress={() =>
+                navigation.navigate('RideDetails', {
+                  rideId: car._id,
+                  driver: car.driver,
+                  phone: car.phone,
+                  car: car.picture,
+                  plate: car.plate,
+                  model: car.make,
+                  seats: car.seats,
+                  price: car.amount,
+                  pickup: car.pickup_point,
+                  dropoff: car.drop_off_location,
+                  date: car.date,
+                  time: car.time,
+                  driverPic: car.driver_pic,
+                })
+              }
+              image={pin}
+              coordinate={{
+                // latitude: -17.7452817,
+                // longitude: 31.0721208,
+                latitude: parseFloat(car.pickupLat),
+                longitude: parseFloat(car.pickupLng),
+              }}
+            />
+            <Circle
+              center={{
+                latitude: parseFloat(car.pickupLat),
+                longitude: parseFloat(car.pickupLng),
+              }}
+              radius={1000}
+              strokeColor={'#55f1f4'}
+              fillColor={'#57b7eb3d'}
+            />
+          </>
+        ))}
       </MapView>
       {/* <View style={styles.headerContainer2}>
         <ImageBackground

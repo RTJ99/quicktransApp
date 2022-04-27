@@ -13,7 +13,7 @@ import {baseUrl} from '../config/baseURL';
 import {useApiRequest} from '../services/Axios/AxiosGet';
 import bg from '../assets/img/bg2.jpg';
 import pin from '../assets/carMarker.png';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const Cars = ({navigation}) => {
@@ -139,9 +139,18 @@ const Cars = ({navigation}) => {
               }
               image={pin}
               coordinate={{
-                latitude: parseInt(car.pickupLat),
-                longitude: parseInt(car.pickupLng),
+                latitude: parseFloat(car.pickupLat),
+                longitude: parseFloat(car.pickupLng),
               }}
+            />
+            <Circle
+              center={{
+                latitude: parseFloat(car.pickupLat),
+                longitude: parseFloat(car.pickupLng),
+              }}
+              radius={1000}
+              strokeColor={'#55f1f4'}
+              fillColor={'#57b7eb3d'}
             />
           </>
         ))}

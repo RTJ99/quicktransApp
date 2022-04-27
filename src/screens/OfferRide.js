@@ -119,13 +119,21 @@ const OfferRide = () => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    search: {
+    search1: {
+      flex: 1,
+      width: 300,
+      marginTop: 80,
+      position: 'absolute',
+      top: 20,
+      elevation: 9,
+    },
+    search2: {
       flex: 1,
       width: 300,
       marginTop: 20,
       position: 'absolute',
       top: 20,
-      zIndex: 5,
+      elevation: 3,
     },
   });
 
@@ -144,7 +152,7 @@ const OfferRide = () => {
     },
     {
       id: '4',
-      name: 'Oprn Truck',
+      name: 'Open Truck',
     },
     {
       id: '5',
@@ -292,7 +300,7 @@ const OfferRide = () => {
     {
       content: (
         <View style={styles1.page}>
-          <View style={styles1.search}>
+          <View style={[styles1.search1, {marginTop: 120}]}>
             <GooglePlacesAutocomplete
               placeholder="Pick Up Location"
               fetchDetails={true}
@@ -317,7 +325,10 @@ const OfferRide = () => {
             />
             {loading && <ActivityIndicator />}
           </View>
-          <View style={[styles1.search, {marginTop: 80}]}>
+          <View style={[styles1.search2, {marginTop: 20}]}>
+            <Text style={{textAlign: 'center'}}>
+              Enter your Drop off Location and Pickup Location{' '}
+            </Text>
             <GooglePlacesAutocomplete
               placeholder="Drop Off Location"
               fetchDetails={true}
@@ -344,11 +355,19 @@ const OfferRide = () => {
               }}
             />
           </View>
-          <Box alignItems="center" style={{marginTop: 35}}>
+        </View>
+      ),
+    },
+    {
+      content: (
+        <ScrollView
+          w={Dimensions.get('window').width}
+          style={{paddingHorizontal: 20, marginBottom: 100}}>
+          <Box alignItems="center" style={{marginTop: 5}}>
             <Input
               placeholder="Price"
-              w="300px"
-              maxWidth="300px"
+              w="320px"
+              maxWidth="350px"
               bg="#F8FAFC"
               variant={'filled'}
               borderColor="#F1F6FE"
@@ -356,7 +375,11 @@ const OfferRide = () => {
               onChangeText={price => setPrice(price)}
             />
           </Box>
-          <Box style={{paddingHorizontal: 20, paddingVertical: 20}}>
+          <Box
+            w="320px"
+            style={{
+              paddingVertical: 20,
+            }}>
             <Text style={{textAlign: 'left', color: '#000', marginBottom: 5}}>
               Number of Seats
             </Text>
@@ -389,7 +412,13 @@ const OfferRide = () => {
                 size="4"
               />
             </Box>
-            <Box style={{display: 'flex', flexDirection: 'row'}}>
+            <Box
+              w="320px"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
               <Box
                 alignItems="center"
                 style={[styles.itemsContainer, {marginRight: 40}]}>
@@ -434,15 +463,13 @@ const OfferRide = () => {
               )}
             </Box>
           </Box>
-        </View>
-      ),
-    },
-    {
-      content: (
-        <Box
-          w={Dimensions.get('window').width}
-          style={{paddingHorizontal: 20, paddingVertical: 20}}>
-          <Text style={{textAlign: 'left', color: '#000', marginBottom: 5}}>
+          <Text
+            style={{
+              textAlign: 'left',
+              color: '#000',
+              marginBottom: 5,
+              marginTop: -10,
+            }}>
             Preferences
           </Text>
           <MultiSelect
@@ -492,7 +519,7 @@ const OfferRide = () => {
           />
           <Box
             alignItems="center"
-            style={{marginTop: 10, paddingHorizontal: 20}}>
+            style={{marginTop: 10, marginBottom: 10, paddingHorizontal: 20}}>
             <Input
               style={{color: '#fff'}}
               placeholder="Car Plate Number"
@@ -504,6 +531,8 @@ const OfferRide = () => {
               color="#000"
               onChangeText={plateNumber => setPlateNumber(plateNumber)}
             />
+          </Box>
+          <Box>
             <Input
               style={{color: '#fff', marginTop: 20}}
               placeholder="Car Model or Make"
@@ -516,7 +545,7 @@ const OfferRide = () => {
               onChangeText={make => setMake(make)}
             />
           </Box>
-        </Box>
+        </ScrollView>
       ),
     },
     {
@@ -661,7 +690,7 @@ const OfferRide = () => {
           <Text style={{color: 'white'}}>Prev</Text>
         </Button>
         <Text style={{fontWeight: 'bold', marginTop: 10}}>
-          Step {currentStep + 1}
+          Step {currentStep + 1} of 4
         </Text>
         <Button
           style={{height: 40}}

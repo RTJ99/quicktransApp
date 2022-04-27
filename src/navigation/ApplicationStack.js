@@ -9,6 +9,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import FindRide from '../screens/FindRide';
 import RideDetails from '../screens/RideDetails';
+import TripDetails from '../screens/TripDetails';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -70,6 +71,18 @@ export default () => {
         <Stack.Screen
           name="Search Ride"
           component={FindRide}
+          options={{
+            headerShown: true,
+            // headerStyle: {backgroundColor: '#161B1D'},
+            headerTitleStyle: {
+              color: '#57B7EB',
+            },
+            headerTintcolor: '#57B7EB',
+          }}
+        />
+        <Stack.Screen
+          name="Trip Details"
+          component={TripDetails}
           options={{
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},

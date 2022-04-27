@@ -8,21 +8,7 @@ import {baseUrl} from '../config/baseURL';
 const RideDetails = ({route, navigation}) => {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    rideId,
-    driver,
-    phone,
-    car,
-    plate,
-    model,
-    seats,
-    price,
-    pickup,
-    dropoff,
-    date,
-    driverPic,
-    time,
-  } = route.params;
+  const {tripData} = route.params;
   const handleUpload = async e => {
     let driverId = await AsyncStorage.getItem('id');
     let driverName = await AsyncStorage.getItem('name');
@@ -31,13 +17,11 @@ const RideDetails = ({route, navigation}) => {
     // localStorage.setItem("token", response.tokenObj.id_token);
     setIsLoading(true);
     const data = JSON.stringify({
-      userId: driverId,
-      id: rideId,
-      passenger: driverName,
+      id: tripData._id,
     });
 
     console.log(data, 'dataaa');
-    await fetch(baseUrl + '/offer-ride/book', {
+    await fetch(baseUrl + '/offer-ride/unbook', {
       method: 'POST',
       body: data,
       redirect: 'follow',
@@ -74,7 +58,7 @@ const RideDetails = ({route, navigation}) => {
   return (
     <ScrollView style={{paddingHorizontal: 40}}>
       <Image
-        source={{uri: car}}
+        source={{uri: tripData.picture}}
         style={{
           width: 280,
           height: 300,
@@ -88,29 +72,29 @@ const RideDetails = ({route, navigation}) => {
           Make
         </Text>
       </View>
-      <Text>{model}</Text>
+      <Text>{tripData.make}</Text>
 
       <View>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           Plate Number
         </Text>
-        <Text>{plate}</Text>
+        <Text>{tripData.plate}</Text>
       </View>
       <View>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           Seats Available
         </Text>
-        <Text>{seats}</Text>
+        <Text>{tripData.seats}</Text>
       </View>
       <View style={{width: 280, height: 50, borderRadius: 5, border: 1}}>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           Driver Name
         </Text>
-        <Text style={{fontSize: 14}}>{driver}</Text>
+        <Text style={{fontSize: 14}}>{tripData.driver}</Text>
       </View>
       <View>
         <Image
-          source={{uri: driverPic}}
+          source={{uri: tripData.driver_pic}}
           style={{
             width: 280,
             height: 300,
@@ -123,25 +107,25 @@ const RideDetails = ({route, navigation}) => {
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           Price
         </Text>
-        <Text>{price}</Text>
+        <Text>{tripData.amount}</Text>
       </View>
       <View>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           From
         </Text>
-        <Text>{pickup}</Text>
+        <Text>{tripData.pickup_point}</Text>
       </View>
       <View>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           To
         </Text>
-        <Text>{dropoff}</Text>
+        <Text>{tripData.drop_off_location}</Text>
       </View>
       <View>
         <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
           Date of Trip
         </Text>
-        <Text>{date}</Text>
+        <Text>{tripData.date}</Text>
       </View>
 
       <Button
@@ -151,7 +135,7 @@ const RideDetails = ({route, navigation}) => {
         w="80%"
         style={[styles.primaryButton, {marginTop: 15}]}
         m="auto">
-        Book Car
+        Cancel Ride
       </Button>
     </ScrollView>
   );

@@ -23,7 +23,7 @@ export const useApiRequest = (url, defaultValue = []) => {
       .then(response => {
         setLoading(false);
         setIsLoaded(true);
-        console.log(response.data);
+        console.log(response.data, 'response');
         setData(response.data);
       })
       .catch(error => {
