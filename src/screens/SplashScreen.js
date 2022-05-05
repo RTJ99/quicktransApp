@@ -27,7 +27,10 @@ export default function SplashScreen({navigation}) {
           <TouchableOpacity
             style={[styles.primaryButton]}
             onPress={() => navigation.navigate('Main')}>
-            <Text style={[styles.buttonText, {color: '#fff'}]}> Proceed </Text>
+            <Text style={[styles.buttonText, {color: '#fff', width: 200}]}>
+              {' '}
+              Proceed{' '}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
