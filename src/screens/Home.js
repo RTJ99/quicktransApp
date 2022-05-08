@@ -1,4 +1,4 @@
-import {Box, Button} from 'native-base';
+import {Box, Button, HamburgerIcon, Menu, Pressable} from 'native-base';
 import React, {Component, useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -6,6 +6,8 @@ import {
   Dimensions,
   ImageBackground,
   Text,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -18,6 +20,8 @@ import {useApiRequest} from '../services/Axios/AxiosGet';
 import {baseUrl} from '../config/baseURL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Header from '../components/HeaderComponent';
+
 const styles = StyleSheet.create({
   page: {
     flex: 1,
@@ -122,10 +126,11 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     getUserInfo();
   }, []);
-
+  const height = Dimensions.get('window').height;
   return (
-    <View style={styles.homeContainer}>
-      <MapView
+    <ScrollView style={[{backgroundColor: 'white', height: height}]}>
+      <Header logout={logout} />
+      {/* <MapView
         style={styles.map}
         userLocationUpdateInterval={5000}
         loadingEnabled={true}
@@ -135,9 +140,15 @@ const HomeScreen = ({navigation}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      />
-      <Box w="95%" style={styles.nextRideContainer}>
-        <ImageBackground
+      /> */}
+      <Box
+        w="90%"
+        m="auto"
+        my="10px"
+        bg="#57B7EB"
+        h="120px"
+        style={{borderRadius: 15}}>
+        {/* <ImageBackground
           blurRadius={4}
           imageStyle={{borderRadius: 20}}
           style={[
@@ -150,65 +161,181 @@ const HomeScreen = ({navigation}) => {
               paddingHorizontal: 20,
             },
           ]}
-          source={bg}>
-          {tripData ? (
-            <>
-              <Text style={{fontWeight: 'bold', fontSize: 20, color: '#fff'}}>
-                Next Ride
-              </Text>
-              <Text style={{fontWeight: 'bold', fontSize: 14, color: '#fff'}}>
-                From: {from}
-              </Text>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  color: '#fff',
-                  marginBottom: 10,
-                }}>
-                To: {to}
-              </Text>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Button
-                  onPress={() =>
-                    navigation.navigate('Trip Details', {tripData})
-                  }>
-                  More Details
-                </Button>
-                <Button bg="amber.100" w="40%">
-                  Cancel
-                </Button>
-              </Box>
-            </>
-          ) : (
-            <Text
+          source={bg}></ImageBackground> */}
+      </Box>
+
+      <Box
+        w="90%"
+        m="auto"
+        mt="10px"
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Box>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+            bg="#f0f8ff"
+            // borderColor="#57B7EB"
+            borderRadius="15px"
+            w="100px"
+            h="90px"
+            p="10px">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Offer Ride')}
               style={{
-                fontSize: 22,
-                color: '#fff',
-                textAlign: 'center',
-                fontWeight: 'bold',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              No upcoming rides
-            </Text>
-          )}
-        </ImageBackground>
+              <Icon name={'car'} color={'#57B7EB'} size={45} />
+            </TouchableOpacity>
+          </Box>
+          <Text
+            style={{
+              marginTop: 10,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            Offer Ride
+          </Text>
+        </Box>
+        <Box>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+            bg="#f0f8ff"
+            // borderColor="#57B7EB"
+            borderRadius="15px"
+            w="100px"
+            h="90px"
+            p="10px">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Search Ride')}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon name={'car-connected'} color={'#57B7EB'} size={45} />
+            </TouchableOpacity>
+          </Box>
+          <Text
+            style={{
+              marginTop: 10,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            Find Ride
+          </Text>
+        </Box>
+        <Box>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+            bg="#f0f8ff"
+            // borderColor="#57B7EB"
+            borderRadius="15px"
+            w="100px"
+            h="90px"
+            p="10px">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Cars')}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon name={'map-marker-star'} color={'#57B7EB'} size={45} />
+            </TouchableOpacity>
+          </Box>
+          <Text
+            style={{
+              marginTop: 10,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            Saved Places
+          </Text>
+        </Box>
       </Box>
       <Box
+        w="90%"
+        m="auto"
+        my="20px"
+        bg="#f0f8ff"
+        p="3"
+        h="50px"
+        style={{borderRadius: 5}}>
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+          Rides
+        </Text>
+      </Box>
+      <Box w="95%" height="200px">
+        {tripData ? (
+          <>
+            <Text style={{fontWeight: 'bold', fontSize: 20, color: '#000'}}>
+              Next Ride
+            </Text>
+            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#000'}}>
+              From: {from}
+            </Text>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 14,
+                color: '#000',
+                marginBottom: 10,
+              }}>
+              To: {to}
+            </Text>
+            <Box
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Button
+                onPress={() => navigation.navigate('Trip Details', {tripData})}>
+                More Details
+              </Button>
+              <Button bg="amber.100" w="40%">
+                Cancel
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <Text
+            style={{
+              fontSize: 22,
+              color: '#c4c3d0',
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}>
+            No upcoming rides
+          </Text>
+        )}
+        {/* </ImageBackground> */}
+      </Box>
+      {/* <Box
         bg="white"
         w="100%"
         overflow="hidden"
         borderColor="coolGray.200"
         p="5"
         shadow="md"
-        style={[
-          styles.elevation,
-          {marginTop: 180, height: 210, borderRadius: 30},
-        ]}>
+        style={[styles.elevation, {height: 210, borderRadius: 30}]}>
         <Button
           onPress={() => navigation.navigate('Offer Ride')}
           size="lg"
@@ -233,8 +360,8 @@ const HomeScreen = ({navigation}) => {
           colorScheme="#57B7EB">
           Sign Out
         </Button>
-      </Box>
-    </View>
+      </Box> */}
+    </ScrollView>
   );
 };
 

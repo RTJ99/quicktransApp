@@ -98,11 +98,8 @@ const Login = ({navigation}) => {
     // AsyncStorage.setItem("token", response.tokenObj.id_token);
 
     setIsLoading(true);
-    cometLogin();
-    //return statement
-    /* @TODO to be removed */
-    navigation.navigate('Main');
-    return;
+    // cometLogin();
+
     const data = {
       username: username,
       password: password,
@@ -117,8 +114,11 @@ const Login = ({navigation}) => {
       },
       body: JSON.stringify(data),
     })
-      .then(response => response.text())
+      .then(response => {
+        response.text();
+      })
       .then(async json => {
+        console.log(json, 'kkkk');
         // console.log(JSON.parse(json).token, 'json');
         let tokenRes = JSON.parse(json);
         console.log(tokenRes, 'resposnse token');
