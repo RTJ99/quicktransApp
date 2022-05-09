@@ -40,33 +40,9 @@ import PlaceholderCar from '../components/PlaceholderCar';
 import AutoComplete from '../components/AutoComplete';
 import {baseUrl} from '../config/baseURL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CometChat} from '@cometchat-pro/react-native-chat';
 
 const Login = ({navigation}) => {
   const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0;
-
-  const cometLogin = () => {
-    var UID = 'jena';
-    var authKey = '989f975b620c1588b06b67fe2f6956e78c2ec031';
-
-    CometChat.getLoggedinUser().then(
-      user => {
-        if (!user) {
-          CometChat.login(UID, authKey).then(
-            user => {
-              console.log('Login Successful:', {user});
-            },
-            error => {
-              console.log('Login failed with exception:', {error});
-            },
-          );
-        }
-      },
-      error => {
-        console.log('Something went wrong', error);
-      },
-    );
-  };
 
   const toast = useToast();
   const [username, setUsername] = useState('');
@@ -96,10 +72,7 @@ const Login = ({navigation}) => {
   const login = async e => {
     // e.preventDefault();
     // AsyncStorage.setItem("token", response.tokenObj.id_token);
-
     setIsLoading(true);
-    // cometLogin();
-
     const data = {
       username: username,
       password: password,
@@ -114,11 +87,8 @@ const Login = ({navigation}) => {
       },
       body: JSON.stringify(data),
     })
-      .then(response => {
-        response.text();
-      })
+      .then(response => response.text())
       .then(async json => {
-        console.log(json, 'kkkk');
         // console.log(JSON.parse(json).token, 'json');
         let tokenRes = JSON.parse(json);
         console.log(tokenRes, 'resposnse token');

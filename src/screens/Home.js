@@ -282,20 +282,18 @@ const HomeScreen = ({navigation}) => {
           Rides
         </Text>
       </Box>
-      <Box w="95%" height="200px">
+      <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
         {tripData ? (
           <>
-            <Text style={{fontWeight: 'bold', fontSize: 20, color: '#000'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
               Next Ride
             </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#000'}}>
-              From: {from}
-            </Text>
+            <Text style={{fontWeight: 'bold', fontSize: 14}}>From: {from}</Text>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 14,
-                color: '#000',
+
                 marginBottom: 10,
               }}>
               To: {to}

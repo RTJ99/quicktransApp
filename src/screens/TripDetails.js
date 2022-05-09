@@ -1,9 +1,10 @@
 import {View, Text, Image} from 'react-native';
 import React, {useState} from 'react';
-import {Button, ScrollView, useToast} from 'native-base';
+import {Box, Button, ScrollView, useToast} from 'native-base';
 import {styles} from '../style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {baseUrl} from '../config/baseURL';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const RideDetails = ({route, navigation}) => {
   const toast = useToast();
@@ -127,16 +128,36 @@ const RideDetails = ({route, navigation}) => {
         </Text>
         <Text>{tripData.date}</Text>
       </View>
+      <Box display="flex" style={{flexDirection: 'row'}}>
+        <Button
+          isLoading={isLoading}
+          isLoadingText="Sending..."
+          onPress={handleUpload}
+          w="30%"
+          style={[styles.primaryButton, {marginTop: 15}]}
+          m="auto">
+          Start Trip
+        </Button>
 
-      <Button
-        isLoading={isLoading}
-        isLoadingText="Sending..."
-        onPress={handleUpload}
-        w="80%"
-        style={[styles.primaryButton, {marginTop: 15}]}
-        m="auto">
-        Cancel Ride
-      </Button>
+        <Button
+          isLoading={isLoading}
+          isLoadingText="Sending..."
+          onPress={handleUpload}
+          w="35%"
+          style={[styles.primaryButton, {marginTop: 15}]}
+          m="auto">
+          Cancel Ride
+        </Button>
+        <Button
+          isLoading={isLoading}
+          isLoadingText="Sending..."
+          onPress={handleUpload}
+          w="30%"
+          style={[styles.primaryButton, {marginTop: 15}]}
+          m="auto">
+          <Icon name="sharealt" color="white" size={20} />
+        </Button>
+      </Box>
     </ScrollView>
   );
 };
