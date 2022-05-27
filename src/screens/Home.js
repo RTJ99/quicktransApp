@@ -1,5 +1,13 @@
-import {Box, Button, HamburgerIcon, Menu, Pressable} from 'native-base';
+import {
+  Box,
+  Button,
+  HamburgerIcon,
+  Menu,
+  useToast,
+  Pressable,
+} from 'native-base';
 import React, {Component, useEffect, useState} from 'react';
+import user from '../assets/user1.jpeg';
 import {
   StyleSheet,
   View,
@@ -8,7 +16,10 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  Image,
 } from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -93,26 +104,160 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     fontSize: 16,
   },
+
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#57B7EB',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    width: 90,
+  },
+  buttonOpen: {
+    backgroundColor: '#57B7EB',
+  },
+  buttonClose: {
+    backgroundColor: '#57B7EB',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginTop: 90,
+    marginHorizontal: 40,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
 });
 
 const HomeScreen = ({navigation}) => {
+  const toast = useToast();
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [tripData, setTripData] = useState('');
+  const [passengers, setPassengers] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [lastRideId, setLastRideId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const logout = () => {
     AsyncStorage.clear();
     navigation.navigate('Login');
   };
+
+  const acceptRide = async id => {
+    // e.preventDefault();
+    // AsyncStorage.setItem("token", response.tokenObj.id_token);
+    setIsLoading(true);
+    const data = {
+      id: lastRideId,
+      userId: await AsyncStorage.getItem('id'),
+    };
+
+    console.log(data, 'dataaa');
+    await fetch(baseUrl + '/offer-ride/accept-ride', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*', // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(async json => {
+        setIsLoading(false);
+
+        // storeUser(tokenRes.token);
+        // console.log(await AsyncStorage.getItem('token'), 'resposnse token');
+        //
+
+        toast.show({
+          title: 'Ride Accepted',
+          status: 'success',
+          placement: 'top',
+          description: 'Ride Accepted',
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        setIsLoading(false);
+        toast.show({
+          title: 'Server Connectivity Error',
+          status: 'error',
+          placement: 'top',
+          description: 'Failed to communicate with server',
+        });
+      });
+  };
+  const getRides = async () => {
+    let id = await AsyncStorage.getItem('id');
+
+    axios
+      .get(baseUrl + '/offer-ride/' + id)
+      .then(function (response) {
+        console.log(response.data, 'reshhhhhh1');
+        // getPassengers(response.data._id);
+        // setLastRideId(response.data._id);
+        // setTripData(response.data);
+
+        // setFrom(response.data.pickup_point);
+        // setTo(response.data.drop_off_location);
+        // setPassengers(response.data.passengers);
+        // handle success
+        console.log(response.data, 'res');
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
   const getUserInfo = async () => {
     let id = await AsyncStorage.getItem('id');
     axios
-      .get(baseUrl + '/user/' + id)
+      .get(baseUrl + '/user/last-ride/' + id)
       .then(function (response) {
-        setTripData(response.data.rides[0]);
+        console.log(response.data, 'res1');
+        getPassengers(response.data._id);
+        setLastRideId(response.data._id);
+        setTripData(response.data);
 
-        setFrom(response.data.rides[0].pickup_point);
-        setTo(response.data.rides[0].drop_off_location);
+        setFrom(response.data.pickup_point);
+        setTo(response.data.drop_off_location);
+        setPassengers(response.data.passengers);
         // handle success
+        console.log(response.data, 'res');
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  const getPassengers = async id => {
+    axios
+      .get(baseUrl + '/offer-ride/passengers/' + id)
+      .then(function (response) {
         console.log(response.data);
       })
       .catch(function (error) {
@@ -123,10 +268,19 @@ const HomeScreen = ({navigation}) => {
         // always executed
       });
   };
+  const isVisible = useIsFocused();
   useEffect(() => {
-    getUserInfo();
+    if (isVisible) {
+      console.log('called when screen open or when back on screen ');
+      getUserInfo();
+      getRides();
+    }
   }, []);
+  const [showToast, setShowToast] = useState(false);
   const height = Dimensions.get('window').height;
+  const simulateAccept = () => {
+    alert('Trip accepted');
+  };
   return (
     <ScrollView style={[{backgroundColor: 'white', height: height}]}>
       <Header logout={logout} />
@@ -147,7 +301,30 @@ const HomeScreen = ({navigation}) => {
         my="10px"
         bg="#57B7EB"
         h="120px"
-        style={{borderRadius: 15}}>
+        style={{
+          borderRadius: 15,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {showToast
+          ? toast.show({
+              title: 'Ride Accepted',
+              status: 'success',
+              placement: 'top',
+              description: 'Ride Accepted',
+            })
+          : null}
+        <Text
+          style={{
+            textAlign: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: 25,
+          }}>
+          Welcome to Quick Trans
+        </Text>
         {/* <ImageBackground
           blurRadius={4}
           imageStyle={{borderRadius: 20}}
@@ -277,10 +454,51 @@ const HomeScreen = ({navigation}) => {
         bg="#f0f8ff"
         p="3"
         h="50px"
-        style={{borderRadius: 5}}>
+        style={{
+          borderRadius: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
         <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
           Rides
         </Text>
+        <TouchableOpacity onPress={() => getRides()}>
+          <Text>Refresh</Text>
+        </TouchableOpacity>
+      </Box>
+      <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
+        <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+          Next Ride
+        </Text>
+        <Text style={{fontWeight: 'bold', fontSize: 14}}>
+          From: Kaguvi Street
+        </Text>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 14,
+
+            marginBottom: 10,
+          }}>
+          To: Nehanda Street
+        </Text>
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Button
+            onPress={() => navigation.navigate('Trip Details', {tripData})}>
+            More Details
+          </Button>
+          <Button bg="amber.100" w="40%">
+            Cancel
+          </Button>
+        </Box>
+
+        {/* </ImageBackground> */}
       </Box>
       <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
         {tripData ? (
@@ -313,19 +531,320 @@ const HomeScreen = ({navigation}) => {
               </Button>
             </Box>
           </>
-        ) : (
-          <Text
-            style={{
-              fontSize: 22,
-              color: '#c4c3d0',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}>
-            No upcoming rides
-          </Text>
-        )}
+        ) : // <Text
+        //   style={{
+        //     fontSize: 22,
+        //     color: '#c4c3d0',
+        //     textAlign: 'center',
+        //     fontWeight: 'bold',
+        //   }}>
+        //   No upcoming rides
+        // </Text>
+        null}
         {/* </ImageBackground> */}
       </Box>
+      <Box
+        w="90%"
+        m="auto"
+        my="20px"
+        bg="#f0f8ff"
+        p="3"
+        h="50px"
+        style={{
+          borderRadius: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+          Requests
+        </Text>
+        <TouchableOpacity onPress={() => getUserInfo()}>
+          <Text>Refresh</Text>
+        </TouchableOpacity>
+      </Box>
+      <Box
+        w="90%"
+        m="auto"
+        my="20px"
+        bg="#f0f8ff"
+        p="3"
+        h="50px"
+        style={{
+          borderRadius: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={{color: '#57B7EB'}}>Tawanda Nhamo</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: 150,
+          }}>
+          <TouchableOpacity
+            style={{
+              color: '#fff',
+              backgroundColor: '#57B7EB',
+              padding: 2,
+              borderRadius: 5,
+            }}
+            onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={{color: '#fff'}}>Details</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              color: '#fff',
+              backgroundColor: '#57B7EB',
+              padding: 2,
+              borderRadius: 5,
+            }}
+            onPress={() => alert('Trip Accepted')}>
+            <Text style={{color: '#fff'}}>Accept</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              color: '#fff',
+              backgroundColor: '#de1738',
+              padding: 2,
+              borderRadius: 5,
+            }}
+            onPress={() => alert('Trip Rejected')}>
+            <Text style={{color: '#fff'}}>Reject</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={[styles.modalView]}>
+              <View style={styles.modalText}>
+                <Text>Pasenger Details</Text>
+                <Text>Tawanda Nhamo</Text>
+                <Image
+                  source={require('../assets/user1.jpeg')}
+                  style={{
+                    width: 100,
+                    height: 100,
+
+                    marginTop: 10,
+                    marginBottom: 10,
+                    borderRadius: 50,
+                  }}
+                />
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: 150,
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      color: '#fff',
+                      backgroundColor: '#57B7EB',
+                      padding: 2,
+                      borderRadius: 5,
+                    }}
+                    onPress={() => alert('Trip Accepted')}>
+                    <Text style={{color: '#fff'}}>Accept</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      color: '#fff',
+                      backgroundColor: '#de1738',
+                      padding: 2,
+                      borderRadius: 5,
+                    }}
+                    onPress={() => simulateAccept()}>
+                    <Text style={{color: '#fff'}}>Reject</Text>
+                  </TouchableOpacity>
+                  <Pressable
+                    style={{backgroundColor: '#555555'}}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Text style={styles.textStyle}>Close</Text>
+                  </Pressable>
+                </View>
+              </View>
+
+              <Box style={[styles.itemsContainer]}>
+                <TouchableOpacity
+                  style={styles.datePicker}
+                  onPress={() => setShowTime(true)}>
+                  <Text style={styles.secondaryTextColor}> To:</Text>
+                </TouchableOpacity>
+              </Box>
+            </View>
+          </View>
+        </Modal>
+      </Box>
+      {passengers.map((passenger, index) => {
+        return (
+          <Box
+            w="90%"
+            m="auto"
+            my="20px"
+            bg="#f0f8ff"
+            p="3"
+            h="50px"
+            style={{
+              borderRadius: 5,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={{color: '#57B7EB'}}>{passenger}</Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: 150,
+              }}>
+              <TouchableOpacity
+                style={{
+                  color: '#fff',
+                  backgroundColor: '#57B7EB',
+                  padding: 2,
+                  borderRadius: 5,
+                }}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={{color: '#fff'}}>Details</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  color: '#fff',
+                  backgroundColor: '#57B7EB',
+                  padding: 2,
+                  borderRadius: 5,
+                }}
+                onPress={() => simulateAccept()}>
+                <Text style={{color: '#fff'}}>Accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  color: '#fff',
+                  backgroundColor: '#de1738',
+                  padding: 2,
+                  borderRadius: 5,
+                }}
+                onPress={() => simulateAccept()}>
+                <Text style={{color: '#fff'}}>Reject</Text>
+              </TouchableOpacity>
+            </View>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={[styles.modalView]}>
+                  <View style={styles.modalText}>
+                    <Text>Pasenger Details</Text>
+                    <Text>{passenger}</Text>
+                    <Image
+                      source={{uri: passenger.picture}}
+                      style={{
+                        width: 100,
+                        height: 100,
+
+                        marginTop: 60,
+                        borderRadius: 50,
+                      }}
+                    />
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: 150,
+                      }}>
+                      <TouchableOpacity
+                        style={{
+                          color: '#fff',
+                          backgroundColor: '#57B7EB',
+                          padding: 2,
+                          borderRadius: 5,
+                        }}
+                        onPress={() => getUserInfo()}>
+                        <Text style={{color: '#fff'}}>Accept</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          color: '#fff',
+                          backgroundColor: '#de1738',
+                          padding: 2,
+                          borderRadius: 5,
+                        }}
+                        onPress={() => getUserInfo()}>
+                        <Text style={{color: '#fff'}}>Reject</Text>
+                      </TouchableOpacity>
+                      <Pressable
+                        style={{backgroundColor: '#555555'}}
+                        onPress={() => setModalVisible(!modalVisible)}>
+                        <Text style={styles.textStyle}>Close</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+
+                  <Box style={[styles.itemsContainer]}>
+                    <TouchableOpacity
+                      style={styles.datePicker}
+                      onPress={() => setShowTime(true)}>
+                      <Text style={styles.secondaryTextColor}> To:</Text>
+                    </TouchableOpacity>
+                  </Box>
+                </View>
+              </View>
+            </Modal>
+          </Box>
+        );
+      })}
+      {tripData ? (
+        <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
+          <>
+            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+              Passengers
+            </Text>
+            <Text style={{fontWeight: 'bold', fontSize: 14}}>From: {from}</Text>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 14,
+
+                marginBottom: 10,
+              }}>
+              To: {to}
+            </Text>
+            <Box
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Button
+                onPress={() => navigation.navigate('Trip Details', {tripData})}>
+                More Details
+              </Button>
+              <Button bg="amber.100" w="40%">
+                Cancel
+              </Button>
+            </Box>
+          </>
+
+          {/* </ImageBackground> */}
+        </Box>
+      ) : null}
       {/* <Box
         bg="white"
         w="100%"

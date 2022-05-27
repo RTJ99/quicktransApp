@@ -287,8 +287,8 @@ const Cars = ({navigation}) => {
                 },
               }}
             />
-            <View>
-              <View style={{marginTop: 100}}>
+            <View style={{position: 'absolute'}}>
+              <View style={{marginTop: 130}}>
                 <Modal
                   animationType="slide"
                   transparent={true}

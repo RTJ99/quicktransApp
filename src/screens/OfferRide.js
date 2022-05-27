@@ -237,6 +237,8 @@ const OfferRide = () => {
   const handleUpload = async e => {
     let driverId = await AsyncStorage.getItem('id');
     let driverName = await AsyncStorage.getItem('name');
+
+    console.log(driverId, 'driverId');
     // e.preventDefault();
     // localStorage.setItem("token", response.tokenObj.id_token);
     setIsLoading(true);
@@ -248,6 +250,7 @@ const OfferRide = () => {
     data.append('seats', quantity);
     // data.append('preferences', preferences);
     // data.append('summary', summary);
+    data.append('driver_id', driverId);
     data.append('driver', driverName);
     data.append('make', make);
     data.append('pickupLat', pickupLat);
@@ -262,7 +265,6 @@ const OfferRide = () => {
     data.append('date', date.toDateString());
     data.append('time', time.toString());
     data.append('amount', price);
-    data.append('driver_id', driverId);
 
     data.append('plate', plateNumber);
 
@@ -559,6 +561,7 @@ const OfferRide = () => {
                 justifyContent: 'space-between',
               }}>
               <Box
+                w="100%"
                 alignItems="center"
                 style={[styles.itemsContainer, {marginRight: 5}]}>
                 <TouchableOpacity
@@ -570,7 +573,7 @@ const OfferRide = () => {
                   </Text>
                 </TouchableOpacity>
               </Box>
-              <Box style={[styles.itemsContainer]}>
+              {/* <Box style={[styles.itemsContainer]}>
                 <TouchableOpacity
                   onPress={requestCameraPermission}
                   style={[styles.datePicker]}>
@@ -579,7 +582,7 @@ const OfferRide = () => {
                     Take Picture
                   </Text>
                 </TouchableOpacity>
-              </Box>
+              </Box> */}
             </Box>
 
             <Text

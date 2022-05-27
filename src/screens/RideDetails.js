@@ -1,11 +1,12 @@
 import {View, Text, Image} from 'react-native';
 import React, {useState} from 'react';
-import {Button, ScrollView, useToast} from 'native-base';
+import {Button, Input, ScrollView, useToast} from 'native-base';
 import {styles} from '../style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {baseUrl} from '../config/baseURL';
 
 const RideDetails = ({route, navigation}) => {
+  const [seatsNeeded, setSeatsNeeded] = useState(1);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -34,6 +35,7 @@ const RideDetails = ({route, navigation}) => {
       userId: driverId,
       id: rideId,
       passenger: driverName,
+      passengers: seatsNeeded,
     });
 
     console.log(data, 'dataaa');
@@ -142,6 +144,14 @@ const RideDetails = ({route, navigation}) => {
           Date of Trip
         </Text>
         <Text>{date}</Text>
+      </View>
+      <View>
+        <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
+          Enter Number of Seats
+        </Text>
+        <Input
+          onChangeText={seatsNeeded => setSeatsNeeded(seatsNeeded)}
+          keyboardType="numeric"></Input>
       </View>
 
       <Button

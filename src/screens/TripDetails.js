@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const RideDetails = ({route, navigation}) => {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [changeText, setChangeText] = useState(false);
   const {tripData} = route.params;
   const handleUpload = async e => {
     let driverId = await AsyncStorage.getItem('id');
@@ -132,11 +133,11 @@ const RideDetails = ({route, navigation}) => {
         <Button
           isLoading={isLoading}
           isLoadingText="Sending..."
-          onPress={handleUpload}
+          onPress={() => setChangeText(true)}
           w="30%"
           style={[styles.primaryButton, {marginTop: 15}]}
           m="auto">
-          Start Trip
+          {changeText === false ? 'Start Trip' : 'End Trip'}
         </Button>
 
         <Button
