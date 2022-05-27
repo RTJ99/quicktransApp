@@ -156,6 +156,8 @@ const HomeScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [lastRideId, setLastRideId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [User, setUser] = useState(null);
+  const [RideByMe, setRideByMe] = useState(null);
   const logout = () => {
     AsyncStorage.clear();
     navigation.navigate('Login');
@@ -233,18 +235,32 @@ const HomeScreen = ({navigation}) => {
   const getUserInfo = async () => {
     let id = await AsyncStorage.getItem('id');
     axios
-      .get(baseUrl + '/user/last-ride/' + id)
+      .get(baseUrl + '/user/' + id)
       .then(function (response) {
-        console.log(response.data, 'res1');
-        getPassengers(response.data._id);
+        setUser(response.data);
+        /*  getPassengers(response.data._id);
         setLastRideId(response.data._id);
         setTripData(response.data);
 
         setFrom(response.data.pickup_point);
         setTo(response.data.drop_off_location);
-        setPassengers(response.data.passengers);
+        setPassengers(response.data.passengers); */
         // handle success
-        console.log(response.data, 'res');
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  const getRidebyMe = async () => {
+    let id = await AsyncStorage.getItem('id');
+    axios
+      .get(baseUrl + '/offer-ride/rideby/' + id)
+      .then(function (response) {
+        setRideByMe(response.data);
       })
       .catch(function (error) {
         // handle error
@@ -273,7 +289,7 @@ const HomeScreen = ({navigation}) => {
     if (isVisible) {
       console.log('called when screen open or when back on screen ');
       getUserInfo();
-      getRides();
+      getRidebyMe();
     }
   }, []);
   const [showToast, setShowToast] = useState(false);
@@ -378,6 +394,7 @@ const HomeScreen = ({navigation}) => {
               marginTop: 10,
               fontWeight: 'bold',
               textAlign: 'center',
+              color: '#233b',
             }}>
             Offer Ride
           </Text>
@@ -410,6 +427,7 @@ const HomeScreen = ({navigation}) => {
               marginTop: 10,
               fontWeight: 'bold',
               textAlign: 'center',
+              color: '#233b',
             }}>
             Find Ride
           </Text>
@@ -442,11 +460,15 @@ const HomeScreen = ({navigation}) => {
               marginTop: 10,
               fontWeight: 'bold',
               textAlign: 'center',
+              color: '#233b',
             }}>
             Saved Places
           </Text>
         </Box>
       </Box>
+
+      {/* CREATED RIDES */}
+
       <Box
         w="90%"
         m="auto"
@@ -461,88 +483,158 @@ const HomeScreen = ({navigation}) => {
           justifyContent: 'space-between',
         }}>
         <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
-          Rides
+          Rides Created
         </Text>
-        <TouchableOpacity onPress={() => getRides()}>
-          <Text>Refresh</Text>
+        <TouchableOpacity
+          onPress={async () => {
+            await getUserInfo();
+            await getRidebyMe();
+          }}>
+          <Text style={{color: '#233b'}}>Refresh</Text>
         </TouchableOpacity>
       </Box>
-      <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
-        <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
-          Next Ride
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 14}}>
-          From: Kaguvi Street
-        </Text>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            fontSize: 14,
+      <Box w="95%" m="auto" borderRadius="15px" p="10px">
+        {RideByMe && RideByMe.length > 0 ? (
+          RideByMe.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                marginBottom: 20,
+                backgroundColor: '#f0f8ff',
+                padding: 10,
+                borderRadius: 10,
+              }}>
+              <Text
+                style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+                Next Ride
+              </Text>
+              <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                From: {from}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 14,
 
-            marginBottom: 10,
-          }}>
-          To: Nehanda Street
-        </Text>
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <Button
-            onPress={() => navigation.navigate('Trip Details', {tripData})}>
-            More Details
-          </Button>
-          <Button bg="amber.100" w="40%">
-            Cancel
-          </Button>
-        </Box>
-
+                  marginBottom: 10,
+                }}>
+                To: {to}
+              </Text>
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Button
+                  onPress={() =>
+                    navigation.navigate('Trip Details', {tripData})
+                  }>
+                  More Details
+                </Button>
+                <Button bg="amber.100" w="40%">
+                  Cancel
+                </Button>
+              </Box>
+            </View>
+          ))
+        ) : (
+          <Text
+            style={{
+              fontSize: 22,
+              color: '#c4c3d0',
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}>
+            No Created rides
+          </Text>
+        )}
         {/* </ImageBackground> */}
       </Box>
-      <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
-        {tripData ? (
-          <>
-            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
-              Next Ride
-            </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 14}}>From: {from}</Text>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontSize: 14,
 
-                marginBottom: 10,
-              }}>
-              To: {to}
-            </Text>
-            <Box
+      {/* BOOKED RIDES */}
+
+      <Box
+        w="90%"
+        m="auto"
+        my="20px"
+        bg="#f0f8ff"
+        p="3"
+        h="50px"
+        style={{
+          borderRadius: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+          Rides Booked
+        </Text>
+        <TouchableOpacity
+          onPress={async () => {
+            await getUserInfo();
+            await getRidebyMe();
+          }}>
+          <Text style={{color: '#233b'}}>Refresh</Text>
+        </TouchableOpacity>
+      </Box>
+      <Box w="95%" m="auto" borderRadius="15px" p="10px">
+        {User && User.booked_rides.length > 0 ? (
+          User.booked_rides.map((item, index) => (
+            <View
+              key={index}
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                marginBottom: 20,
+                backgroundColor: '#f0f8ff',
+                padding: 10,
+                borderRadius: 10,
               }}>
-              <Button
-                onPress={() => navigation.navigate('Trip Details', {tripData})}>
-                More Details
-              </Button>
-              <Button bg="amber.100" w="40%">
-                Cancel
-              </Button>
-            </Box>
-          </>
-        ) : // <Text
-        //   style={{
-        //     fontSize: 22,
-        //     color: '#c4c3d0',
-        //     textAlign: 'center',
-        //     fontWeight: 'bold',
-        //   }}>
-        //   No upcoming rides
-        // </Text>
-        null}
+              <Text style={{fontWeight: 'bold', fontSize: 14, color: '#233b'}}>
+                From: {item.from}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 14,
+                  color: '#233b',
+                  marginBottom: 10,
+                }}>
+                To: {item.to}
+              </Text>
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Button
+                  onPress={() =>
+                    navigation.navigate('Trip Details', {RideId: item.id})
+                  }>
+                  More Details
+                </Button>
+                <Button bg="amber.100" w="40%">
+                  Cancel
+                </Button>
+              </Box>
+            </View>
+          ))
+        ) : (
+          <Text
+            style={{
+              fontSize: 22,
+              color: '#c4c3d0',
+              textAlign: 'center',
+
+              fontWeight: 'bold',
+            }}>
+            No Booked rides
+          </Text>
+        )}
         {/* </ImageBackground> */}
       </Box>
+
+      {/* REQUESTS */}
       <Box
         w="90%"
         m="auto"

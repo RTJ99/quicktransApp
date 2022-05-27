@@ -1,1 +1,1 @@
-export let baseUrl = 'http://172.16.10.76:8080';
+export let baseUrl = 'http://172.16.14.188:8080';

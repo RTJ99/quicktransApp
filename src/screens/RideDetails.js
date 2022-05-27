@@ -33,9 +33,8 @@ const RideDetails = ({route, navigation}) => {
     setIsLoading(true);
     const data = JSON.stringify({
       userId: driverId,
-      id: rideId,
-      passenger: driverName,
-      passengers: seatsNeeded,
+      rideId: rideId,
+      seatsNeeded: seatsNeeded,
     });
 
     console.log(data, 'dataaa');

@@ -199,7 +199,9 @@ const Login = ({navigation}) => {
             </Text>
           </TouchableOpacity>
           <View style={{display: 'flex', flexDirection: 'row', marginTop: 5}}>
-            <Text style={{marginRight: 5}}>Dont have an account?</Text>
+            <Text style={{marginRight: 5, color: 'black'}}>
+              Dont have an account?
+            </Text>
             <Text
               onPress={() => navigation.navigate('Register')}
               style={{color: 'red'}}>

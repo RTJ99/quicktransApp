@@ -301,6 +301,9 @@ const Register = ({navigation}) => {
 
                   borderWidth: 1,
                 },
+                predefinedPlacesDescription: {
+                  color: '#1faadb',
+                },
               }}
             />
             {isLoading && <ActivityIndicator />}
@@ -336,6 +339,9 @@ const Register = ({navigation}) => {
                   borderColor: '#F1F6FE',
 
                   borderWidth: 1,
+                },
+                predefinedPlacesDescription: {
+                  color: '#1faadb',
                 },
               }}
             />

@@ -7,7 +7,7 @@ import App from './App';
 import {name as appName} from './app.json';
 import {CometChat} from '@cometchat-pro/react-native-chat';
 
-const cometLogin = () => {
+/* const cometLogin = () => {
   var UID = 'jena';
   var authKey = '989f975b620c1588b06b67fe2f6956e78c2ec031';
 
@@ -46,6 +46,6 @@ CometChat.init(appID, appSetting).then(
     console.log('Initialization failed with error:', error);
     // Check the reason for error and take appropriate action.
   },
-);
+); */
 
 AppRegistry.registerComponent(appName, () => App);

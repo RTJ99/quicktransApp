@@ -303,6 +303,9 @@ const OfferRide = () => {
       content: (
         <View style={styles1.page}>
           <View style={[styles1.search1, {marginTop: 120}]}>
+            <Text style={{textAlign: 'left', color: '#233b', marginBottom: 10}}>
+              Enter your Pickup Location
+            </Text>
             <GooglePlacesAutocomplete
               placeholder="Pick Up Location"
               fetchDetails={true}
@@ -320,16 +323,20 @@ const OfferRide = () => {
                 textInput: {
                   backgroundColor: '#F8FAFC',
                   borderColor: '#F1F6FE',
-
+                  color: '#233b',
+                  textDecorationColor: '#233b',
                   borderWidth: 1,
                 },
+              }}
+              textInputProps={{
+                placeholderTextColor: '#233b',
               }}
             />
             {loading && <ActivityIndicator />}
           </View>
           <View style={[styles1.search2, {marginTop: 20}]}>
-            <Text style={{textAlign: 'center'}}>
-              Enter your Drop off Location and Pickup Location{' '}
+            <Text style={{textAlign: 'left', color: '#233b', marginBottom: 10}}>
+              Enter your Drop off Location
             </Text>
             <GooglePlacesAutocomplete
               placeholder="Drop Off Location"
@@ -351,9 +358,16 @@ const OfferRide = () => {
                 textInput: {
                   backgroundColor: '#F8FAFC',
                   borderColor: '#F1F6FE',
-
+                  color: '#233b',
+                  textDecorationColor: '#233b',
                   borderWidth: 1,
                 },
+                listView: {
+                  backgroundColor: '#000',
+                },
+              }}
+              textInputProps={{
+                placeholderTextColor: '#233b',
               }}
             />
           </View>
