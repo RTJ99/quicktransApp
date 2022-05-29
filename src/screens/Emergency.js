@@ -119,7 +119,7 @@ const HomeScreen = ({navigation}) => {
   const [emergencyContact, setEmergencyContact] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const [mobileNumber, setMobileNumber] = useState('0784675999');
+  const [mobileNumber, setMobileNumber] = useState(['0784675999']);
   const [bodySMS, setBodySMS] = useState(
     'Please follow https://aboutreact.com',
   );
@@ -168,7 +168,10 @@ const HomeScreen = ({navigation}) => {
             },
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            DirectSms.sendDirectSms(mobileNumber, body);
+            mobileNumber.forEach(async item => {
+              await DirectSms.sendDirectSms(item, body);
+            });
+
             alert('SMS sent');
           } else {
             alert('SMS permission denied');

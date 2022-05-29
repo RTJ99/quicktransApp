@@ -160,6 +160,8 @@ const HomeScreen = ({navigation}) => {
   const [User, setUser] = useState(null);
   const [RideByMe, setRideByMe] = useState(null);
   const [Requests, setRequests] = useState(null);
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [canceling, setCanceling] = useState(false);
   const logout = () => {
     AsyncStorage.clear();
     navigation.navigate('Login');
@@ -251,6 +253,53 @@ const HomeScreen = ({navigation}) => {
       })
       .catch(function (error) {
         // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  const AcceptRide = async (rideid, pass, status) => {
+    setAcceptLoading(true);
+
+    let id = await AsyncStorage.getItem('id');
+    axios
+      .post(baseUrl + '/offer-ride/accept-ride', {
+        userId: id,
+        id: rideid,
+        passengerid: pass,
+        status: status,
+      })
+      .then(function (response) {
+        setAcceptLoading(false);
+        setUser(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        setAcceptLoading(false);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const Unbook = async rideid => {
+    console.log('rideid');
+    setCanceling(true);
+
+    let id = await AsyncStorage.getItem('id');
+    axios
+      .post(baseUrl + '/offer-ride/unbook', {
+        userId: id,
+        id: rideid,
+      })
+      .then(function (response) {
+        setCanceling(false);
+      })
+      .catch(function (error) {
+        // handle error
+        setCanceling(false);
         console.log(error);
       })
       .then(function () {
@@ -594,8 +643,8 @@ const HomeScreen = ({navigation}) => {
         </Text>
       ) : (
         <Box w="95%" m="auto" borderRadius="15px" p="10px">
-          {User && User.booked_rides.length > 0 ? (
-            User.booked_rides.map((item, index) => (
+          {User && User.booked_rides?.length > 0 ? (
+            User.booked_rides?.map((item, index) => (
               <View
                 key={index}
                 style={{
@@ -649,10 +698,16 @@ const HomeScreen = ({navigation}) => {
                         More Details
                       </Text>
                     </Button>
-                    <Button p={1} my={1} style={{backgroundColor: '#de1538'}}>
+                    <Button
+                      onPress={() => {
+                        Unbook(item.id);
+                      }}
+                      p={1}
+                      my={1}
+                      style={{backgroundColor: '#de1538'}}>
                       <Text style={{fontFamily: 'DMSans', color: 'white'}}>
                         {' '}
-                        Cancel
+                        {canceling ? 'Loading ..' : 'Cancel'}
                       </Text>
                     </Button>
                   </Box>
@@ -727,44 +782,6 @@ const HomeScreen = ({navigation}) => {
                 padding: 10,
                 borderRadius: 10,
               }}>
-              <Divider my="2" bg={'#BABFC4'} />
-
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Rubik-Bold',
-                      fontSize: 14,
-                      marginBottom: 15,
-                      color: '#233b',
-                    }}>
-                    From: {item.pickup_point}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Rubik-Bold',
-                      fontSize: 14,
-                      color: '#233b',
-                      marginBottom: 10,
-                    }}>
-                    To: {item.drop_off_location}
-                  </Text>
-                </View>
-              </View>
               {item.passengers.map((passenger, i) => {
                 return passenger.status == 'pending' ? (
                   <Box
@@ -774,26 +791,35 @@ const HomeScreen = ({navigation}) => {
                     my="20px"
                     bg="#f0f8ff"
                     p="3"
-                    h="50px"
+                    h="60px"
                     style={{
                       borderRadius: 5,
                       display: 'flex',
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
-                    <Text style={{color: '#005792'}}>{passenger.seats}</Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Rubik-Bold',
+                        fontSize: 15,
+                        marginBottom: 10,
+                        color: '#233b',
+                      }}>
+                      {passenger.name}
+                    </Text>
                     <View
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        width: 150,
+                        width: 170,
                       }}>
                       <TouchableOpacity
                         style={{
                           color: '#fff',
                           backgroundColor: '#005792',
-                          padding: 2,
+                          padding: 6,
+
                           borderRadius: 5,
                         }}
                         onPress={() => setModalVisible(!modalVisible)}>
@@ -803,21 +829,31 @@ const HomeScreen = ({navigation}) => {
                         style={{
                           color: '#fff',
                           backgroundColor: '#005792',
-                          padding: 2,
+                          padding: 6,
+
                           borderRadius: 5,
                         }}
-                        onPress={() => simulateAccept()}>
-                        <Text style={{color: '#fff'}}>Accept</Text>
+                        onPress={() =>
+                          AcceptRide(item._id, passenger.id, 'accept')
+                        }>
+                        <Text style={{color: '#fff'}}>
+                          {acceptLoading ? 'Loading...' : 'Accept'}
+                        </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={{
                           color: '#fff',
                           backgroundColor: '#de1738',
-                          padding: 2,
+                          padding: 6,
+
                           borderRadius: 5,
                         }}
-                        onPress={() => simulateAccept()}>
-                        <Text style={{color: '#fff'}}>Reject</Text>
+                        onPress={() =>
+                          AcceptRide(item._id, passenger.id, 'reject')
+                        }>
+                        <Text style={{color: '#fff'}}>
+                          {acceptLoading ? 'Loading...' : 'Reject'}
+                        </Text>
                       </TouchableOpacity>
                     </View>
                     <Modal
@@ -831,15 +867,32 @@ const HomeScreen = ({navigation}) => {
                       <View style={styles.centeredView}>
                         <View style={[styles.modalView]}>
                           <View style={styles.modalText}>
-                            <Text>Pasenger Details</Text>
-                            <Text>{passenger}</Text>
+                            <Text
+                              style={{
+                                fontFamily: 'Rubik-Bold',
+                                fontSize: 20,
+                                marginBottom: 10,
+                                color: '#233b',
+                              }}>
+                              Ride Request
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: 'DMSans',
+                                fontSize: 18,
+                                marginBottom: 1,
+                                color: '#233b',
+                              }}>
+                              {passenger.name} Needs {passenger.seats} seat/s
+                            </Text>
+
                             <Image
                               source={{uri: passenger.picture}}
                               style={{
                                 width: 100,
                                 height: 100,
 
-                                marginTop: 60,
+                                marginVertical: 20,
                                 borderRadius: 50,
                               }}
                             />
@@ -854,24 +907,40 @@ const HomeScreen = ({navigation}) => {
                                 style={{
                                   color: '#fff',
                                   backgroundColor: '#005792',
-                                  padding: 2,
+                                  padding: 6,
+                                  margin: 2,
                                   borderRadius: 5,
                                 }}
-                                onPress={() => getUserInfo()}>
-                                <Text style={{color: '#fff'}}>Accept</Text>
+                                onPress={() =>
+                                  AcceptRide(item._id, passenger.id, 'accept')
+                                }>
+                                <Text style={{color: '#fff'}}>
+                                  {acceptLoading ? 'Loading...' : 'Accept'}
+                                </Text>
                               </TouchableOpacity>
                               <TouchableOpacity
                                 style={{
                                   color: '#fff',
                                   backgroundColor: '#de1738',
-                                  padding: 2,
+                                  padding: 6,
+                                  margin: 2,
                                   borderRadius: 5,
                                 }}
-                                onPress={() => getUserInfo()}>
-                                <Text style={{color: '#fff'}}>Reject</Text>
+                                onPress={() =>
+                                  AcceptRide(item._id, passenger.id, 'reject')
+                                }>
+                                <Text style={{color: '#fff'}}>
+                                  {acceptLoading ? 'Loading...' : 'Reject'}
+                                </Text>
                               </TouchableOpacity>
                               <Pressable
-                                style={{backgroundColor: '#555555'}}
+                                style={{
+                                  color: '#fff',
+                                  backgroundColor: '#555555',
+                                  padding: 6,
+                                  margin: 2,
+                                  borderRadius: 5,
+                                }}
                                 onPress={() => setModalVisible(!modalVisible)}>
                                 <Text style={styles.textStyle}>Close</Text>
                               </Pressable>
@@ -896,8 +965,6 @@ const HomeScreen = ({navigation}) => {
                   <></>
                 );
               })}
-
-              <Divider my="2" bg={'#BABFC4'} />
             </View>
           ))
         ) : (
