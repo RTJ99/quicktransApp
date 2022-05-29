@@ -491,6 +491,28 @@ const RideDetails = ({route, navigation}) => {
         </View>
         <Divider my="2" bg={'#BABFC4'} />
 
+        <Box alignItems="center" style={{marginTop: 20}}>
+          <Text
+            style={{
+              fontFamily: 'Rubik-Bold',
+              fontSize: 14,
+              marginBottom: 5,
+              color: '#233b',
+            }}>
+            Enter Seats Needed
+          </Text>
+          <Input
+            type="number"
+            placeholder="SeatsNeeded"
+            w="320px"
+            maxWidth="300px"
+            borderColor={'#233b'}
+            borderWidth={1}
+            color="#000"
+            onChangeText={data => setSeatsNeeded(data)}
+          />
+        </Box>
+
         <Box display="flex" mb={10} style={{flexDirection: 'row'}}>
           <Button
             isLoading={isLoading}

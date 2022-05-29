@@ -91,6 +91,7 @@ const Register = ({navigation}) => {
   };
 
   const login = async e => {
+    console.log(data, 'dataaa');
     // e.preventDefault();
     // localStorage.setItem("token", response.tokenObj.id_token);
     setIsLoading(true);
@@ -526,7 +527,7 @@ const Register = ({navigation}) => {
           shadow={2}
           bg={'#005792'}
           size="sm"
-          mb={50}
+          mb={70}
           placement="bottom-left"
           onPress={() => wizard.current.prev()}
           icon={<Icon name="arrowleft" size={20} color="white" />}
@@ -540,7 +541,7 @@ const Register = ({navigation}) => {
           shadow={2}
           size="sm"
           bg={'#005792'}
-          mb={50}
+          mb={70}
           placement="bottom-right"
           onPress={() => wizard.current.next()}
           icon={<Icon name="arrowright" size={20} color="white" />}
@@ -548,12 +549,11 @@ const Register = ({navigation}) => {
       )}
       {isLastStep && (
         <Fab
-          disabled={isLastStep}
           renderInPortal={false}
           shadow={2}
           size="md"
           bg={'#005792'}
-          mb={50}
+          mb={70}
           w="150"
           placement="bottom-right"
           onPress={login}

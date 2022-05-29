@@ -212,15 +212,27 @@ const Login = ({navigation}) => {
                 borderRadius: 10,
                 width: 270,
               }}>
-              <Text
-                style={{
-                  color: '#fff',
-                  width: 200,
-                  textAlign: 'center',
-                  fontFamily: 'DMSans',
-                }}>
-                Login
-              </Text>
+              {isLoading ? (
+                <Text
+                  style={{
+                    color: '#fff',
+                    width: 200,
+                    textAlign: 'center',
+                    fontFamily: 'DMSans',
+                  }}>
+                  Loading...
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#fff',
+                    width: 200,
+                    textAlign: 'center',
+                    fontFamily: 'DMSans',
+                  }}>
+                  Login
+                </Text>
+              )}
             </TouchableOpacity>
             <View style={{display: 'flex', flexDirection: 'row', marginTop: 5}}>
               <Text
@@ -235,39 +247,6 @@ const Login = ({navigation}) => {
             </View>
           </Box>
         </Stack>
-        {/*        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#57B7EB',
-            textAlign: 'center',
-          }}>
-          Login
-        </Text>
-
-        <Box alignItems="center" style={{marginTop: 20}}>
-          <Input
-            type="email"
-            placeholder="Email"
-            w="100%"
-            maxWidth="300px"
-            variant="underlined"
-            color="#000"
-            onChangeText={username => setUsername(username)}
-          />
-        </Box>
-
-        <Box alignItems="center" style={{marginTop: 20}}>
-          <Input
-            type="password"
-            placeholder="Password"
-            w="100%"
-            maxWidth="300px"
-            variant="underlined"
-            color="#000"
-            onChangeText={password => setPassword(password)}
-          />
-        </Box> */}
       </KeyboardAvoidingView>
     </View>
   );

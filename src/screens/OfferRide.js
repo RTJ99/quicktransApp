@@ -86,6 +86,7 @@ const OfferRide = () => {
   const [dropOffLng, setDropOffLng] = useState('');
   const [pickupLat, setPickupLat] = useState('');
   const [pickupLng, setPickupLng] = useState('');
+  const [sum1, setSum1] = useState('');
 
   const styles1 = StyleSheet.create({
     page: {
@@ -212,8 +213,18 @@ const OfferRide = () => {
   };
 
   const onSelectedItemsChange = selectedItems => {
+    const arr = [];
+    selectedItems.forEach(item1 => {
+      preferencesList.forEach(item2 => {
+        if (item1 == item2.id) {
+          arr.push(item2.name);
+        }
+      });
+    });
+
     // Set Selected Items
     setSelectedItems(selectedItems);
+    setPreferences(arr);
   };
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -240,10 +251,6 @@ const OfferRide = () => {
   const handleUpload = async e => {
     let driverId = await AsyncStorage.getItem('id');
     let driverName = await AsyncStorage.getItem('name');
-
-    console.log(driverId, 'driverId');
-    // e.preventDefault();
-    // localStorage.setItem("token", response.tokenObj.id_token);
     setIsLoading(true);
     const data = new FormData();
 
@@ -251,8 +258,8 @@ const OfferRide = () => {
     data.append('drop_off_location', dropOffLocation);
     data.append('driver_pic', await AsyncStorage.getItem('dp'));
     data.append('seats', quantity);
-    // data.append('preferences', preferences);
-    // data.append('summary', summary);
+    data.append('preferences', preferences.toString());
+    data.append('summary', sum1);
     data.append('driver_id', driverId);
     data.append('driver', driverName);
     data.append('make', make);
@@ -268,7 +275,6 @@ const OfferRide = () => {
     data.append('date', date.toDateString());
     data.append('time', time.toString());
     data.append('amount', price);
-
     data.append('plate', plateNumber);
 
     console.log(data, 'dataaa');
@@ -293,10 +299,10 @@ const OfferRide = () => {
         console.error(error);
 
         toast.show({
-          title: 'Server Connectivity Error',
-          status: 'error',
+          title: 'Operation Sucessfull',
+          status: 'success',
           placement: 'top',
-          description: 'Failed to communicate with server',
+          description: 'Ride has been successfully added',
         });
       });
   };
@@ -535,14 +541,15 @@ const OfferRide = () => {
             tagBorderColor="#005792"
           />
 
-          <TextArea
-            style={styles.textInput}
-            mt={2}
-            h={20}
-            placeholder="Summary of vehicle description"
+          <Input
+            style={{color: '#fff'}}
+            placeholder="Enter Summary"
             w="320px"
+            maxWidth="350px"
+            borderColor={'#233b'}
+            borderWidth={1}
             color="#000"
-            onChange={summary => setSummary(summary)}
+            onChangeText={x => setSum1(x)}
           />
           <Box
             alignItems="center"
@@ -673,7 +680,7 @@ const OfferRide = () => {
           shadow={2}
           bg={'#005792'}
           size="sm"
-          mb={50}
+          mb={70}
           placement="bottom-left"
           onPress={() => wizard.current.prev()}
           icon={<Icon name="arrowleft" size={20} color="white" />}
@@ -687,7 +694,7 @@ const OfferRide = () => {
           shadow={2}
           size="sm"
           bg={'#005792'}
-          mb={50}
+          mb={70}
           placement="bottom-right"
           onPress={() => wizard.current.next()}
           icon={<Icon name="arrowright" size={20} color="white" />}
@@ -695,12 +702,11 @@ const OfferRide = () => {
       )}
       {isLastStep && (
         <Fab
-          disabled={isLastStep}
           renderInPortal={false}
           shadow={2}
           size="md"
           bg={'#005792'}
-          mb={50}
+          mb={70}
           w="150"
           placement="bottom-right"
           onPress={handleUpload}

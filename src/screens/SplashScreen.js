@@ -25,7 +25,7 @@ export default function SplashScreen({navigation}) {
               borderRadius: 30,
               width: 250,
             }}
-            onPress={() => navigation.navigate('Main')}>
+            onPress={() => navigation.navigate('Login')}>
             <Text
               style={{
                 color: '#fff',
