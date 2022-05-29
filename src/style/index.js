@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     borderColor: '#F1F6FE',
     borderRadius: 5,
     padding: 5,
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 5,
   },
   body: {
@@ -52,7 +52,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   primaryButton: {
-    backgroundColor: '#57B7EB',
+    backgroundColor: '#005792',
+
     // backgroundColor: '#FC8080',
     padding: 10,
     borderRadius: 20,
@@ -84,9 +85,8 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   textInput: {
-    borderColor: '#389D7B',
+    borderColor: '#233b',
     borderWidth: 1,
-    borderRadius: 10,
     marginVertical: 10,
     padding: 10,
   },

@@ -10,28 +10,45 @@ export default function SplashScreen({navigation}) {
       <View style={[styles.container]}>
         <View style={[{flex: 1}]}></View>
         <View style={[styles.body, {flex: 3}]}>
-          <Image style={{width: 200, height: 200}} source={logo} />
-          <View>
+          <View style={{flex: 1}}>
+            <Image style={{width: 200, height: 200}} source={logo} />
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#005792',
+              height: 50,
+              display: 'flex',
+              flexDirection: 'row',
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 30,
+              width: 250,
+            }}
+            onPress={() => navigation.navigate('Main')}>
+            <Text
+              style={{
+                color: '#fff',
+                width: 200,
+                textAlign: 'center',
+                fontFamily: 'DMSans',
+              }}>
+              Get Started
+            </Text>
+          </TouchableOpacity>
+          <View style={{}}>
             <Text
               style={{
                 textAlign: 'center',
-                fontSize: 40,
-                fontWeight: 'bold',
-                color: '#57B7EB',
+                fontFamily: 'DMSans',
+                fontSize: 15,
+                color: '#005792',
                 marginTop: 10,
                 marginBottom: 20,
               }}>
-              Quick Trans
+              Ready to earn?
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.primaryButton]}
-            onPress={() => navigation.navigate('Main')}>
-            <Text style={[styles.buttonText, {color: '#fff', width: 200}]}>
-              {' '}
-              Proceed{' '}
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     </>

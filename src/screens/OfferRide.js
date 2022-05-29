@@ -22,13 +22,15 @@ import {
   ScrollView,
   TextArea,
   useToast,
+  Fab,
+  Center,
   Modal,
   Button,
 } from 'native-base';
 import placeholder from '../assets/img/placeholder-car.png';
 import {preferencesList} from './../constants/preferences';
 import MultiSelect from 'react-native-multiple-select';
-import {Icon} from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {offerRideService} from '../services';
 import ImagePicker from 'react-native-image-picker';
@@ -40,6 +42,7 @@ import Wizard from 'react-native-wizard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OfferRide = () => {
+  const height = Dimensions.get('window').height;
   const toast = useToast();
   const wizard = useRef();
   const [isFirstStep, setIsFirstStep] = useState(true);
@@ -303,9 +306,6 @@ const OfferRide = () => {
       content: (
         <View style={styles1.page}>
           <View style={[styles1.search1, {marginTop: 120}]}>
-            <Text style={{textAlign: 'left', color: '#233b', marginBottom: 10}}>
-              Enter your Pickup Location
-            </Text>
             <GooglePlacesAutocomplete
               placeholder="Pick Up Location"
               fetchDetails={true}
@@ -319,24 +319,31 @@ const OfferRide = () => {
                 key: 'AIzaSyCOqulxPGaTEOX6sP9TexQlZ7S2mC6KOxs',
                 language: 'en',
               }}
+              textInputProps={{
+                placeholderTextColor: '#BABFC4',
+              }}
               styles={{
                 textInput: {
-                  backgroundColor: '#F8FAFC',
-                  borderColor: '#F1F6FE',
-                  color: '#233b',
-                  textDecorationColor: '#233b',
+                  backgroundColor: '#F6F6F6',
+
+                  borderColor: '#233b',
                   borderWidth: 1,
                 },
-              }}
-              textInputProps={{
-                placeholderTextColor: '#233b',
               }}
             />
             {loading && <ActivityIndicator />}
           </View>
           <View style={[styles1.search2, {marginTop: 20}]}>
-            <Text style={{textAlign: 'left', color: '#233b', marginBottom: 10}}>
-              Enter your Drop off Location
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#005792',
+                fontFamily: 'Rubik-Bold',
+                textAlign: 'center',
+                marginHorizontal: 20,
+                marginVertical: 10,
+              }}>
+              Location Details
             </Text>
             <GooglePlacesAutocomplete
               placeholder="Drop Off Location"
@@ -354,20 +361,15 @@ const OfferRide = () => {
                 language: 'en',
                 components: 'country:zw',
               }}
+              textInputProps={{
+                placeholderTextColor: '#BABFC4',
+              }}
               styles={{
                 textInput: {
-                  backgroundColor: '#F8FAFC',
-                  borderColor: '#F1F6FE',
-                  color: '#233b',
-                  textDecorationColor: '#233b',
+                  backgroundColor: '#F6F6F6',
+                  borderColor: '#233b',
                   borderWidth: 1,
                 },
-                listView: {
-                  backgroundColor: '#000',
-                },
-              }}
-              textInputProps={{
-                placeholderTextColor: '#233b',
               }}
             />
           </View>
@@ -379,14 +381,24 @@ const OfferRide = () => {
         <ScrollView
           w={Dimensions.get('window').width}
           style={{paddingHorizontal: 20, marginBottom: 100}}>
+          <Text
+            style={{
+              fontSize: 16,
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
+              textAlign: 'center',
+              marginHorizontal: 20,
+              marginVertical: 10,
+            }}>
+            Vehicle Details
+          </Text>
           <Box alignItems="center" style={{marginTop: 5}}>
             <Input
               placeholder="Price"
               w="320px"
               maxWidth="350px"
-              bg="#F8FAFC"
-              variant={'filled'}
-              borderColor="#F1F6FE"
+              borderColor={'#233b'}
+              borderWidth={1}
               color="#000"
               onChangeText={price => setPrice(price)}
             />
@@ -394,7 +406,7 @@ const OfferRide = () => {
           <Box
             w="320px"
             style={{
-              paddingVertical: 20,
+              paddingVertical: 10,
             }}>
             <Text style={{textAlign: 'left', color: '#000', marginBottom: 5}}>
               Number of Seats
@@ -409,22 +421,25 @@ const OfferRide = () => {
                   justifyContent: 'space-between',
                   paddingHorizontal: 10,
                   paddingVertical: 15,
+                  borderColor: '#233b',
+                  backgroundColor: '#F6F6F6',
+                  borderWidth: 1,
                 },
               ]}>
               {quantity !== 0 ? (
                 <MinusIcon
                   onPress={() => setQuantity(quantity - 1)}
-                  color="#57B7EB"
+                  color="#005792"
                   size="4"
                   style={{marginTop: -5}}
                 />
               ) : (
-                <MinusIcon color="#57B7EB" size="4" style={{marginTop: -5}} />
+                <MinusIcon color="#005792" size="4" style={{marginTop: -5}} />
               )}
               <Text style={styles.primaryTextColor}>{quantity}</Text>
               <AddIcon
                 onPress={() => setQuantity(quantity + 1)}
-                color="#57B7EB"
+                color="#005792"
                 size="4"
               />
             </Box>
@@ -437,7 +452,10 @@ const OfferRide = () => {
               }}>
               <Box
                 alignItems="center"
-                style={[styles.itemsContainer, {marginRight: 40}]}>
+                style={[
+                  styles.itemsContainer,
+                  {marginRight: 40, borderColor: '#233b', borderWidth: 1},
+                ]}>
                 <TouchableOpacity
                   style={styles.datePicker}
                   onPress={() => setShowDate(true)}>
@@ -447,7 +465,11 @@ const OfferRide = () => {
                   </Text>
                 </TouchableOpacity>
               </Box>
-              <Box style={[styles.itemsContainer]}>
+              <Box
+                style={[
+                  styles.itemsContainer,
+                  {borderColor: '#233b', borderWidth: 1},
+                ]}>
                 <TouchableOpacity
                   style={styles.datePicker}
                   onPress={() => setShowTime(true)}>
@@ -479,15 +501,7 @@ const OfferRide = () => {
               )}
             </Box>
           </Box>
-          <Text
-            style={{
-              textAlign: 'left',
-              color: '#000',
-              marginBottom: 5,
-              marginTop: -10,
-            }}>
-            Preferences
-          </Text>
+
           <MultiSelect
             items={preferencesList}
             uniqueKey="id"
@@ -496,8 +510,8 @@ const OfferRide = () => {
             selectText="Pick Items"
             searchInputPlaceholderText="Search Items..."
             onChangeInput={text => console.log(text)}
-            tagRemoveIconColor="#57B7EB"
-            tagTextColor="#57B7EB"
+            tagRemoveIconColor="#005792"
+            tagTextColor="#005792"
             selectedItemTextColor="#000"
             selectedItemIconColor="#000"
             itemTextColor="#000"
@@ -505,31 +519,28 @@ const OfferRide = () => {
             searchInputStyle={{
               color: '#1E2426',
 
-              backgroundColor: '#F8FAFC',
               borderRadius: 5,
             }}
             styleDropdownMenuSubsection={{
-              backgroundColor: '#F8FAFC',
               borderRadius: 5,
               paddingHorizontal: 10,
+              borderColor: '#233b',
               borderWidth: 1,
-              borderColor: '#F1F6FE',
               height: 50,
+              backgroundColor: '#F6F6F6',
             }}
-            submitButtonColor="#57B7EB"
+            submitButtonColor="#005792"
             submitButtonText="Submit"
             styleInputGroup={styles.itemsContainer}
-            tagBorderColor="#57B7EB"
+            tagBorderColor="#005792"
           />
-          <Text style={{textAlign: 'left', color: '#000', marginBottom: 5}}>
-            About Vehicle
-          </Text>
+
           <TextArea
             style={styles.textInput}
+            mt={2}
             h={20}
             placeholder="Summary of vehicle description"
             w="320px"
-            bg="white"
             color="#000"
             onChange={summary => setSummary(summary)}
           />
@@ -541,22 +552,20 @@ const OfferRide = () => {
               placeholder="Car Plate Number"
               w="320px"
               maxWidth="350px"
-              variant={'filled'}
-              bg="#F8FAFC"
-              borderColor="#F1F6FE"
+              borderColor={'#233b'}
+              borderWidth={1}
               color="#000"
               onChangeText={plateNumber => setPlateNumber(plateNumber)}
             />
           </Box>
           <Box>
             <Input
-              style={{color: '#fff', marginTop: 20}}
+              style={{color: '#fff'}}
               placeholder="Car Model or Make"
               w="320px"
               maxWidth="350px"
-              variant={'filled'}
-              bg="#F8FAFC"
-              borderColor="#F1F6FE"
+              borderColor={'#233b'}
+              borderWidth={1}
               color="#000"
               onChangeText={make => setMake(make)}
             />
@@ -566,162 +575,81 @@ const OfferRide = () => {
     },
     {
       content: (
-        <ScrollView style={[styles.container]}>
-          <Box style={{paddingHorizontal: 20, paddingVertical: 20}}>
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Box
-                w="100%"
-                alignItems="center"
-                style={[styles.itemsContainer, {marginRight: 5}]}>
-                <TouchableOpacity
-                  onPress={handlePickImage}
-                  style={[styles.datePicker]}>
-                  <Text
-                    style={[styles.secondaryTextColor, {fontWeight: 'bold'}]}>
-                    Select Picture
-                  </Text>
-                </TouchableOpacity>
-              </Box>
-              {/* <Box style={[styles.itemsContainer]}>
-                <TouchableOpacity
-                  onPress={requestCameraPermission}
-                  style={[styles.datePicker]}>
-                  <Text
-                    style={[styles.secondaryTextColor, {fontWeight: 'bold'}]}>
-                    Take Picture
-                  </Text>
-                </TouchableOpacity>
-              </Box> */}
-            </Box>
+        <ScrollView>
+          <Text
+            style={{
+              fontSize: 16,
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
+              textAlign: 'center',
+              marginHorizontal: 20,
+              marginVertical: 6,
+            }}>
+            Add vehicle Photo
+          </Text>
 
+          <Box alignItems="center" mt={10} style={{marginRight: 5}}>
             <Text
               style={{
-                textAlign: 'left',
-                color: '#000',
-                marginBottom: 5,
-                marginTop: 10,
+                fontSize: 13,
+                color: '#005792',
+                fontFamily: 'DMSans',
+                textAlign: 'center',
+                marginHorizontal: 20,
+                marginBottom: 4,
               }}>
-              Car Picture
+              Clients will be able to view this photo
             </Text>
 
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#57B7EB',
+                height: 50,
+
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 30,
+                width: 250,
+              }}
+              onPress={handlePickImage}>
+              <Text
+                style={{
+                  color: '#fff',
+                  width: 200,
+                  textAlign: 'center',
+                  fontFamily: 'DMSans',
+                }}>
+                Click to Select a Picture
+              </Text>
+            </TouchableOpacity>
             {resourcePath !== 1 ? (
               <Image
                 source={{uri: resourcePath}}
-                style={{width: 280, height: 300}}
+                style={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: 200,
+                  borderWidth: 1,
+                  padding: 4,
+                  borderColor: 'black',
+                  marginTop: 20,
+                }}
               />
             ) : (
-              <PlaceholderCar />
+              <></>
             )}
           </Box>
-        </ScrollView>
-      ),
-    },
-    {
-      content: (
-        <ScrollView style={styles.container}>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              marginTop: 15,
-              fontSize: 16,
-              textAlign: 'center',
-            }}>
-            Confirm details
-          </Text>
-          <View
-            style={{
-              textAlign: 'left',
-              width: Dimensions.get('window').width,
-              paddingHorizontal: 20,
-            }}>
-            <Text style={{fontWeight: 'bold'}}>Pick up location</Text>
-            <Text style={{marginVertical: 5}}>
-              {pickupLocations ? pickupLocations : 'Missing'}
-            </Text>
-            <Text style={{fontWeight: 'bold'}}>Drop off location</Text>
-            <Text style={{marginVertical: 5}}>
-              {dropOffLocation ? dropOffLocation : 'Missing'}
-            </Text>
-            <Text style={{fontWeight: 'bold'}}>Price</Text>
-            <Text style={{marginVertical: 5}}>{price ? price : 'Missing'}</Text>
-            <Text style={{fontWeight: 'bold'}}>Seats Available</Text>
-            <Text style={{marginVertical: 5}}>
-              {quantity ? quantity : 'Missing'}
-            </Text>
-            <Text style={{fontWeight: 'bold'}}>Date and Time</Text>
-
-            <Text style={{marginVertical: 5}}>
-              {time ? time.toString() : 'Missing'}
-            </Text>
-            <Text style={{fontWeight: 'bold'}}>Preferences</Text>
-            <Text style={{marginVertical: 5}}>
-              {preferences
-                ? preferences.map((preferenc, index) => {
-                    <Text>{preferenc}</Text>;
-                  })
-                : 'Missing'}
-            </Text>
-            {/* <Text style={{fontWeight: 'bold'}}>Summary of Car</Text> */}
-            {/* <Text style={{marginVertical: 5}}>
-              {summary ? summary : 'Missing'}
-            </Text> */}
-            <Text style={{fontWeight: 'bold'}}>Car Plate</Text>
-            <Text style={{marginVertical: 5}}>
-              {plateNumber ? plateNumber : 'Missing'}
-            </Text>
-            <Box style={{paddingHorizontal: 20, marginBottom: 5}}>
-              <Button
-                isLoading={isLoading}
-                isLoadingText="Sending..."
-                onPress={handleUpload}
-                style={[styles.primaryButton, {marginTop: 15}]}>
-                Post
-              </Button>
-            </Box>
-          </View>
         </ScrollView>
       ),
     },
   ];
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          backgroundColor: '#FFF',
-          borderBottomColor: '#dedede',
-          borderBottomWidth: 1,
-          padding: 4,
-        }}>
-        <Button
-          style={{height: 40}}
-          disabled={isFirstStep}
-          onPress={() => wizard.current.prev()}>
-          <Text style={{color: 'white'}}>Prev</Text>
-        </Button>
-        <Text style={{fontWeight: 'bold', marginTop: 10}}>
-          Step {currentStep + 1} of 4
-        </Text>
-        <Button
-          style={{height: 40}}
-          disabled={isLastStep}
-          onPress={() => wizard.current.next()}>
-          <Text style={{color: 'white'}}>Next</Text>
-        </Button>
-      </View>
-      <View
-        style={{
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+    <View bg="white" style={{height: height}}>
+      <View>
         <Wizard
           ref={wizard}
           steps={stepList}
@@ -738,6 +666,48 @@ const OfferRide = () => {
           }}
         />
       </View>
+      {!isFirstStep && (
+        <Fab
+          disabled={isFirstStep}
+          renderInPortal={false}
+          shadow={2}
+          bg={'#005792'}
+          size="sm"
+          mb={50}
+          placement="bottom-left"
+          onPress={() => wizard.current.prev()}
+          icon={<Icon name="arrowleft" size={20} color="white" />}
+        />
+      )}
+
+      {!isLastStep && (
+        <Fab
+          disabled={isLastStep}
+          renderInPortal={false}
+          shadow={2}
+          size="sm"
+          bg={'#005792'}
+          mb={50}
+          placement="bottom-right"
+          onPress={() => wizard.current.next()}
+          icon={<Icon name="arrowright" size={20} color="white" />}
+        />
+      )}
+      {isLastStep && (
+        <Fab
+          disabled={isLastStep}
+          renderInPortal={false}
+          shadow={2}
+          size="md"
+          bg={'#005792'}
+          mb={50}
+          w="150"
+          placement="bottom-right"
+          onPress={handleUpload}
+          icon={<Icon name="rocket1" size={20} color="white" />}
+          label={isLoading ? 'Loading...' : 'Post    '}
+        />
+      )}
     </View>
   );
 };

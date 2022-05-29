@@ -1,5 +1,6 @@
 import {View, Text, Image, Dimensions} from 'react-native';
 import React, {useState, useEffect} from 'react';
+import {Divider} from 'native-base';
 import {Box, Button, ScrollView, useToast, Center, Spinner} from 'native-base';
 import {styles} from '../style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,6 +49,7 @@ const RideDetails = ({route, navigation}) => {
     setIsLoading(true);
     const data = JSON.stringify({
       id: tripData._id,
+      userId: driverId,
     });
 
     console.log(data, 'dataaa');
@@ -86,97 +88,430 @@ const RideDetails = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView style={{paddingHorizontal: 40}}>
+    <ScrollView style={{paddingHorizontal: 10}}>
       {fetching === true ? (
         <Center h={height}>
           <Spinner color="#d75369" size={30} />
         </Center>
       ) : (
         <View>
-          <Image
-            source={{uri: tripData?.picture}}
+          <View
             style={{
-              width: 280,
-              height: 300,
-              marginTop: 60,
-              borderRadius: 5,
-            }}
-          />
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Make
-            </Text>
-          </View>
-          <Text style={{fontSize: 12, color: '#2C3539'}}>{tripData.make}</Text>
-
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Plate Number
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.plate}
-            </Text>
-          </View>
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Seats Available
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.seats}
-            </Text>
-          </View>
-          <View style={{width: 280, height: 50, borderRadius: 5, border: 1}}>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Driver Name
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.driver}
-            </Text>
-          </View>
-          <View>
+              backgroundColor: 'white',
+              marginTop: 10,
+              marginBottom: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'center',
+              alignItems: 'center',
+            }}>
             <Image
               source={{uri: tripData?.driver_pic}}
               style={{
-                width: 280,
-                height: 300,
+                width: 100,
+                height: 100,
+                marginTop: 10,
+                borderRadius: 300,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#005792',
+                fontFamily: 'Rubik-Bold',
+                textAlign: 'center',
+                marginHorizontal: 20,
+                marginVertical: 6,
+              }}>
+              {tripData?.driver}
+            </Text>
+            <Divider w="80%" my="2" bg={'#BABFC4'} />
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  0
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  Rides
+                </Text>
+              </View>
+              <Divider
+                orientation="vertical"
+                w="1px"
+                h={6}
+                my="2"
+                bg={'#BABFC4'}
+              />
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  0
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  Passangers
+                </Text>
+              </View>
+              <Divider
+                orientation="vertical"
+                w="1px"
+                h={6}
+                my="2"
+                bg={'#BABFC4'}
+              />
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  0
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#005792',
+                    fontFamily: 'Rubik-Bold',
+                    textAlign: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 6,
+                  }}>
+                  Rating
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Text
+            style={{
+              fontSize: 16,
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
+              textAlign: 'center',
+              marginHorizontal: 20,
+              marginVertical: 6,
+            }}>
+            Vehicle Details
+          </Text>
+          <View>
+            <Text
+              style={{
+                fontFamily: 'Rubik-Bold',
+                fontSize: 14,
+                marginBottom: 5,
+                color: '#233b',
+              }}>
+              Vehicle Images:
+            </Text>
+            <Image
+              source={{uri: tripData?.picture}}
+              style={{
+                width: 100,
+                height: 100,
 
                 borderRadius: 5,
               }}
             />
           </View>
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Price
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.amount}
-            </Text>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  Make:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData.make}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              From
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.pickup_point}
-            </Text>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  Plate Number:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.plate}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              To
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.drop_off_location}
-            </Text>
+          <Divider my="2" bg={'#BABFC4'} />
+          <Text
+            style={{
+              fontSize: 16,
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
+              textAlign: 'center',
+              marginHorizontal: 20,
+              marginVertical: 6,
+            }}>
+            Trip Details
+          </Text>
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  Seats Available:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.seats}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={{fontSize: 14, color: '#2C3539', fontWeight: 'bold'}}>
-              Date of Trip
-            </Text>
-            <Text style={{fontSize: 12, color: '#2C3539'}}>
-              {tripData?.date}
-            </Text>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  Price:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.amount}
+                </Text>
+              </View>
+            </View>
           </View>
-          <Box display="flex" style={{flexDirection: 'row'}}>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  From:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.pickup_point}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  To:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.drop_off_location}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <Divider my="2" bg={'#BABFC4'} />
+          <View
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Rubik-Bold',
+                    fontSize: 14,
+                    marginBottom: 5,
+                    color: '#233b',
+                  }}>
+                  Trip Date:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#2C3539',
+                    fontFamily: 'DMSans',
+                  }}>
+                  {tripData?.date}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <Divider my="2" bg={'#BABFC4'} />
+
+          <Box display="flex" mb={10} style={{flexDirection: 'row'}}>
             <Button
               isLoading={isLoading}
               isLoadingText="Sending..."
@@ -184,7 +519,9 @@ const RideDetails = ({route, navigation}) => {
               w="30%"
               style={[styles.primaryButton, {marginTop: 15}]}
               m="auto">
-              {changeText === false ? 'Start Trip' : 'End Trip'}
+              <Text style={{fontFamily: 'DMSans'}}>
+                {changeText === false ? 'Start Trip' : 'End Trip'}
+              </Text>
             </Button>
 
             <Button
@@ -194,16 +531,7 @@ const RideDetails = ({route, navigation}) => {
               w="35%"
               style={[styles.primaryButton, {marginTop: 15}]}
               m="auto">
-              Cancel Ride
-            </Button>
-            <Button
-              isLoading={isLoading}
-              isLoadingText="Sending..."
-              onPress={handleUpload}
-              w="30%"
-              style={[styles.primaryButton, {marginTop: 15}]}
-              m="auto">
-              <Icon name="sharealt" color="white" size={20} />
+              <Text style={{fontFamily: 'DMSans'}}> Cancel Ride</Text>
             </Button>
           </Box>
         </View>

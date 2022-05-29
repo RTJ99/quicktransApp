@@ -1,4 +1,15 @@
-import {Box, Button, HamburgerIcon, Menu, Pressable} from 'native-base';
+import {
+  Box,
+  Button,
+  FormControl,
+  HamburgerIcon,
+  Input,
+  Menu,
+  Modal,
+  Pressable,
+  useToast,
+  Fab,
+} from 'native-base';
 import React, {Component, useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -8,6 +19,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  PermissionsAndroid,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -21,6 +33,9 @@ import {baseUrl} from '../config/baseURL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Header from '../components/HeaderComponent';
+import Geolocation from '@react-native-community/geolocation';
+import SendSMS from 'react-native-sms';
+import {NativeModules} from 'react-native';
 
 const styles = StyleSheet.create({
   page: {
@@ -96,10 +111,120 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen = ({navigation}) => {
+  let DirectSms = NativeModules.DirectSms;
+  const toast = useToast();
+
+  const [showModal, setShowModal] = useState(false);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [tripData, setTripData] = useState('');
+  const [emergencyContact, setEmergencyContact] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [mobileNumber, setMobileNumber] = useState('0784675999');
+  const [bodySMS, setBodySMS] = useState(
+    'Please follow https://aboutreact.com',
+  );
+
+  const getOneTimeLocation = () => {
+    return Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => {
+        //getting the Longitude from the location json
+        const currentLongitude = JSON.stringify(position.coords.longitude);
+
+        //getting the Latitude from the location json
+        const currentLatitude = JSON.stringify(position.coords.latitude);
+        console.log(currentLatitude);
+        return {
+          currentLatitude,
+          currentLongitude,
+        };
+      },
+      error => {
+        console.log(error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      },
+    );
+  };
+
+  const sendDirectSms = async () => {
+    Geolocation.getCurrentPosition(async res => {
+      const body = `https://www.google.com/maps/@${res.coords.latitude},${res.coords.longitude},20z/data=!3m1!4b1!4m5!3m4!1s0x1931a437ad96167b:0xe91b065f2baed9ba!8m2!3d${res.coords.latitude}!4d${res.coords.longitude}`;
+      if (mobileNumber) {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.SEND_SMS,
+            {
+              title: 'Send SMS App Sms Permission',
+              message:
+                'Send SMS App needs access to your inbox ' +
+                'so you can send messages in background.',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            DirectSms.sendDirectSms(mobileNumber, body);
+            alert('SMS sent');
+          } else {
+            alert('SMS permission denied');
+          }
+        } catch (error) {
+          console.warn(error);
+          alert(error);
+        }
+      }
+    });
+  };
+  const handleUpload = async e => {
+    let driverId = await AsyncStorage.getItem('id');
+
+    // e.preventDefault();
+    // localStorage.setItem("token", response.tokenObj.id_token);
+    setIsLoading(true);
+    const data = JSON.stringify({
+      email: emergencyContact,
+      userId: driverId,
+    });
+
+    console.log(data, 'dataaa');
+    await fetch(baseUrl + '/emergency-contact', {
+      method: 'POST',
+      body: data,
+      redirect: 'follow',
+      headers: {
+        Accept: 'application/json, text/plain, */*', // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(data, 'dataaa');
+        console.log(json, 'json');
+        setIsLoading(false);
+        toast.show({
+          title: 'Operation Sucessfull',
+          status: 'success',
+          placement: 'top',
+          description: 'Ride has been successfully added',
+        });
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.error(error);
+
+        toast.show({
+          title: 'Server Connectivity Error',
+          status: 'error',
+          placement: 'top',
+          description: 'Failed to communicate with server',
+        });
+      });
+  };
   const logout = () => {
     AsyncStorage.clear();
     navigation.navigate('Login');
@@ -125,9 +250,10 @@ const HomeScreen = ({navigation}) => {
   }, []);
   const height = Dimensions.get('window').height;
   return (
-    <ScrollView style={[{backgroundColor: 'white', height: height}]}>
-      <Header logout={logout} />
-      {/* <MapView
+    <View style={{height: height}}>
+      <ScrollView style={[{backgroundColor: 'white', height: height}]}>
+        <Header logout={logout} />
+        {/* <MapView
         style={styles.map}
         userLocationUpdateInterval={5000}
         loadingEnabled={true}
@@ -138,78 +264,131 @@ const HomeScreen = ({navigation}) => {
           longitudeDelta: 0.0421,
         }}
       /> */}
-      <Box
-        w="90%"
-        m="auto"
-        my="10px"
-        bg="#57B7EB"
-        h="120px"
-        style={{
-          borderRadius: 15,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Text
+
+        <Box
+          w="90%"
+          m="auto"
+          my="20px"
+          bg="#f0f8ff"
+          p="3"
+          h="50px"
           style={{
-            textAlign: 'center',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 25,
+            borderRadius: 5,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}>
-          Welcome to Quick Trans
-        </Text>
-      </Box>
-
-      <Box
-        w="90%"
-        m="auto"
-        my="20px"
-        bg="#f0f8ff"
-        p="3"
-        h="50px"
-        style={{borderRadius: 5}}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
-          Emergency Contacts
-        </Text>
-      </Box>
-      <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
-        {emergencyContacts ? (
-          <>
-            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
-              Next Ride
-            </Text>
-
+          <Text style={{fontSize: 20, fontFamily: 'DMSans', color: '#005792'}}>
+            Emergency Contacts
+          </Text>
+          <TouchableOpacity
+            onPress={async () => {
+              await emergencies();
+            }}>
+            <Box
+              w="55px"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Icon
+                onPress={() => setShowModal(true)}
+                name="plus"
+                size={20}
+                color="gray"
+              />
+              <Icon name="refresh" size={20} color="gray" />
+            </Box>
+          </TouchableOpacity>
+        </Box>
+        <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
+          {emergencyContacts ? (
             <Box
               style={{
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Button
-                onPress={() => navigation.navigate('Trip Details', {tripData})}>
-                Alert
-              </Button>
-              <Button bg="amber.100" w="40%">
-                Remove
-              </Button>
+              <Text
+                style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+                Next Ride
+              </Text>
+
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  width: 60,
+                  justifyContent: 'space-between',
+                }}>
+                <Icon name="alert-circle-outline" size={20} color="red" />
+                <Icon name="delete-outline" size={20} color="red" />
+              </Box>
             </Box>
-          </>
-        ) : (
-          <Text
-            style={{
-              fontSize: 22,
-              color: '#c4c3d0',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}>
-            No Emergency contacts
-          </Text>
-        )}
-        {/* </ImageBackground> */}
-      </Box>
-    </ScrollView>
+          ) : (
+            <Text
+              style={{
+                fontSize: 22,
+                color: '#c4c3d0',
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}>
+              No Emergency contacts
+            </Text>
+          )}
+          {/* </ImageBackground> */}
+        </Box>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Add Emergency Contact</Modal.Header>
+            <Modal.Body>
+              <FormControl mt="3">
+                <FormControl.Label>Email</FormControl.Label>
+                <Input
+                  placeholder="Emergency Contact Email"
+                  color="#000"
+                  onChangeText={emergencyContact =>
+                    setEmergencyContact(emergencyContact)
+                  }
+                />
+              </FormControl>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button.Group space={2}>
+                <Button
+                  variant="ghost"
+                  colorScheme="blueGray"
+                  onPress={() => {
+                    setShowModal(false);
+                  }}>
+                  Cancel
+                </Button>
+                <Button
+                  onPress={() => {
+                    handleUpload();
+                  }}>
+                  Save
+                </Button>
+              </Button.Group>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
+      </ScrollView>
+      <Fab
+        renderInPortal={false}
+        shadow={2}
+        size="md"
+        bg={'#005792'}
+        mb={70}
+        w="150"
+        placement="bottom-right"
+        onPress={sendDirectSms}
+        icon={<Icon name="alert" size={20} color="white" />}
+        label={'Alert All'}
+      />
+    </View>
   );
 };
 

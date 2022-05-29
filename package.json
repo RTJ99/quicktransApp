@@ -12,6 +12,7 @@
   "dependencies": {
     "@cometchat-pro/react-native-chat": "^2.4.1",
     "@react-native-async-storage/async-storage": "^1.17.3",
+    "@react-native-community/blur": "^3.6.0",
     "@react-native-community/datetimepicker": "^5.1.0",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.11",
@@ -46,6 +47,7 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^3.10.2",
     "react-native-share": "^7.4.1",
+    "react-native-sms": "^1.11.0",
     "react-native-sound": "^0.11.2",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "^12.1.0",

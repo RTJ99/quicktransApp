@@ -5,6 +5,7 @@ import {
   Menu,
   useToast,
   Pressable,
+  Divider,
 } from 'native-base';
 import React, {Component, useEffect, useState} from 'react';
 import user from '../assets/user1.jpeg';
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   nextRideContainer: {
     borderRadius: 40,
     marginTop: 10,
-    // backgroundColor: '#57B7EB',
+    // backgroundColor: '#005792',
     height: 150,
     // paddingTop: 60,
   },
@@ -95,10 +96,10 @@ const styles = StyleSheet.create({
   },
   elevation: {
     elevation: 5,
-    shadowColor: '#57B7EB',
+    shadowColor: '#005792',
   },
   buttonStyle: {
-    backgroundColor: '#57B7EB',
+    backgroundColor: '#005792',
     color: 'white',
     marginBottom: 20,
     paddingVertical: 20,
@@ -108,9 +109,9 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    color: '#57B7EB',
+    color: '#005792',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'DMSans',
   },
   button: {
     borderRadius: 20,
@@ -119,14 +120,14 @@ const styles = StyleSheet.create({
     width: 90,
   },
   buttonOpen: {
-    backgroundColor: '#57B7EB',
+    backgroundColor: '#005792',
   },
   buttonClose: {
-    backgroundColor: '#57B7EB',
+    backgroundColor: '#005792',
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'DMSans',
     textAlign: 'center',
   },
   modalText: {
@@ -315,7 +316,6 @@ const HomeScreen = ({navigation}) => {
         w="90%"
         m="auto"
         my="10px"
-        bg="#57B7EB"
         h="120px"
         style={{
           borderRadius: 15,
@@ -324,43 +324,22 @@ const HomeScreen = ({navigation}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {showToast
-          ? toast.show({
-              title: 'Ride Accepted',
-              status: 'success',
-              placement: 'top',
-              description: 'Ride Accepted',
-            })
-          : null}
         <Text
           style={{
             textAlign: 'center',
-            color: 'white',
-            fontWeight: 'bold',
+            color: '#233b',
+            fontFamily: 'Rubik-Bold',
             fontSize: 25,
           }}>
           Welcome to Quick Trans
         </Text>
-        {/* <ImageBackground
-          blurRadius={4}
-          imageStyle={{borderRadius: 20}}
-          style={[
-            styles.nextRideContainer,
-            {
-              flex: 1,
-              resizeMode: 'cover',
-              justifyContent: 'center',
-              color: 'white',
-              paddingHorizontal: 20,
-            },
-          ]}
-          source={bg}></ImageBackground> */}
       </Box>
 
       <Box
         w="90%"
         m="auto"
-        mt="10px"
+        mt="20px"
+        mb={10}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -374,7 +353,7 @@ const HomeScreen = ({navigation}) => {
               justifyContent: 'center',
             }}
             bg="#f0f8ff"
-            // borderColor="#57B7EB"
+            // borderColor="#005792"
             borderRadius="15px"
             w="100px"
             h="90px"
@@ -386,13 +365,13 @@ const HomeScreen = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon name={'car'} color={'#57B7EB'} size={45} />
+              <Icon name={'car'} color={'#005792'} size={45} />
             </TouchableOpacity>
           </Box>
           <Text
             style={{
               marginTop: 10,
-              fontWeight: 'bold',
+              fontFamily: 'DMSans',
               textAlign: 'center',
               color: '#233b',
             }}>
@@ -407,7 +386,7 @@ const HomeScreen = ({navigation}) => {
               justifyContent: 'center',
             }}
             bg="#f0f8ff"
-            // borderColor="#57B7EB"
+            // borderColor="#005792"
             borderRadius="15px"
             w="100px"
             h="90px"
@@ -419,13 +398,13 @@ const HomeScreen = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon name={'car-connected'} color={'#57B7EB'} size={45} />
+              <Icon name={'car-connected'} color={'#005792'} size={45} />
             </TouchableOpacity>
           </Box>
           <Text
             style={{
               marginTop: 10,
-              fontWeight: 'bold',
+              fontFamily: 'DMSans',
               textAlign: 'center',
               color: '#233b',
             }}>
@@ -440,29 +419,29 @@ const HomeScreen = ({navigation}) => {
               justifyContent: 'center',
             }}
             bg="#f0f8ff"
-            // borderColor="#57B7EB"
+            // borderColor="#005792"
             borderRadius="15px"
             w="100px"
             h="90px"
             p="10px">
             <TouchableOpacity
-              onPress={() => navigation.navigate('Cars')}
+              onPress={() => navigation.navigate('Suggested Cars')}
               style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon name={'map-marker-star'} color={'#57B7EB'} size={45} />
+              <Icon name={'map-marker-star'} color={'#005792'} size={45} />
             </TouchableOpacity>
           </Box>
           <Text
             style={{
               marginTop: 10,
-              fontWeight: 'bold',
+              fontFamily: 'DMSans',
               textAlign: 'center',
               color: '#233b',
             }}>
-            Saved Places
+            Suggested Cars
           </Text>
         </Box>
       </Box>
@@ -482,7 +461,7 @@ const HomeScreen = ({navigation}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+        <Text style={{fontSize: 20, fontFamily: 'DMSans', color: '#005792'}}>
           Rides Created
         </Text>
         <TouchableOpacity
@@ -490,7 +469,7 @@ const HomeScreen = ({navigation}) => {
             await getUserInfo();
             await getRidebyMe();
           }}>
-          <Text style={{color: '#233b'}}>Refresh</Text>
+          <Icon name="refresh" size={20} color="gray" />
         </TouchableOpacity>
       </Box>
       <Box w="95%" m="auto" borderRadius="15px" p="10px">
@@ -505,15 +484,15 @@ const HomeScreen = ({navigation}) => {
                 borderRadius: 10,
               }}>
               <Text
-                style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+                style={{fontFamily: 'DMSans', fontSize: 14, color: '#005792'}}>
                 Next Ride
               </Text>
-              <Text style={{fontWeight: 'bold', fontSize: 14}}>
+              <Text style={{fontFamily: 'DMSans', fontSize: 14}}>
                 From: {from}
               </Text>
               <Text
                 style={{
-                  fontWeight: 'bold',
+                  fontFamily: 'DMSans',
                   fontSize: 14,
 
                   marginBottom: 10,
@@ -544,7 +523,7 @@ const HomeScreen = ({navigation}) => {
               fontSize: 22,
               color: '#c4c3d0',
               textAlign: 'center',
-              fontWeight: 'bold',
+              fontFamily: 'DMSans',
             }}>
             No Created rides
           </Text>
@@ -567,7 +546,7 @@ const HomeScreen = ({navigation}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+        <Text style={{fontSize: 20, fontFamily: 'DMSans', color: '#005792'}}>
           Rides Booked
         </Text>
         <TouchableOpacity
@@ -575,7 +554,7 @@ const HomeScreen = ({navigation}) => {
             await getUserInfo();
             await getRidebyMe();
           }}>
-          <Text style={{color: '#233b'}}>Refresh</Text>
+          <Icon name="refresh" size={20} color="gray" />
         </TouchableOpacity>
       </Box>
       <Box w="95%" m="auto" borderRadius="15px" p="10px">
@@ -584,39 +563,86 @@ const HomeScreen = ({navigation}) => {
             <View
               key={index}
               style={{
-                marginBottom: 20,
-                backgroundColor: '#f0f8ff',
                 padding: 10,
                 borderRadius: 10,
               }}>
-              <Text style={{fontWeight: 'bold', fontSize: 14, color: '#233b'}}>
-                From: {item.from}
-              </Text>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 14,
-                  color: '#233b',
-                  marginBottom: 10,
-                }}>
-                To: {item.to}
-              </Text>
-              <Box
+              <Divider my="2" bg={'#BABFC4'} />
+
+              <View
                 style={{
                   display: 'flex',
                   flexDirection: 'row',
+                  alignContent: 'center',
+                  alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                <Button
-                  onPress={() =>
-                    navigation.navigate('Trip Details', {RideId: item.id})
-                  }>
-                  More Details
-                </Button>
-                <Button bg="amber.100" w="40%">
-                  Cancel
-                </Button>
-              </Box>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: 'Rubik-Bold',
+                      fontSize: 14,
+                      marginBottom: 15,
+                      color: '#233b',
+                    }}>
+                    From: {item.from}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Rubik-Bold',
+                      fontSize: 14,
+                      color: '#233b',
+                      marginBottom: 10,
+                    }}>
+                    To: {item.to}
+                  </Text>
+                </View>
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Button
+                    p={1}
+                    my={1}
+                    onPress={() =>
+                      navigation.navigate('Trip Details', {RideId: item.id})
+                    }>
+                    <Text style={{fontFamily: 'DMSans', color: 'white'}}>
+                      {' '}
+                      More Details
+                    </Text>
+                  </Button>
+                  <Button p={1} my={1} style={{backgroundColor: '#de1538'}}>
+                    <Text style={{fontFamily: 'DMSans', color: 'white'}}>
+                      {' '}
+                      Cancel
+                    </Text>
+                  </Button>
+                </Box>
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                {/* <Icon name="alpha-b-circle" size={30} color="gray" /> */}
+                <Text>Status</Text>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans',
+                    fontSize: 14,
+                    color: 'orange',
+                    marginBottom: 10,
+                  }}>
+                  Pending
+                </Text>
+              </View>
+
+              <Divider my="2" bg={'#BABFC4'} />
             </View>
           ))
         ) : (
@@ -626,7 +652,7 @@ const HomeScreen = ({navigation}) => {
               color: '#c4c3d0',
               textAlign: 'center',
 
-              fontWeight: 'bold',
+              fontFamily: 'DMSans',
             }}>
             No Booked rides
           </Text>
@@ -648,11 +674,11 @@ const HomeScreen = ({navigation}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#57B7EB'}}>
+        <Text style={{fontSize: 20, fontFamily: 'DMSans', color: '#005792'}}>
           Requests
         </Text>
         <TouchableOpacity onPress={() => getUserInfo()}>
-          <Text>Refresh</Text>
+          <Icon name="refresh" size={20} color="gray" />
         </TouchableOpacity>
       </Box>
       <Box
@@ -668,7 +694,7 @@ const HomeScreen = ({navigation}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={{color: '#57B7EB'}}>Tawanda Nhamo</Text>
+        <Text style={{color: '#005792'}}>Tawanda Nhamo</Text>
         <View
           style={{
             display: 'flex',
@@ -679,7 +705,7 @@ const HomeScreen = ({navigation}) => {
           <TouchableOpacity
             style={{
               color: '#fff',
-              backgroundColor: '#57B7EB',
+              backgroundColor: '#005792',
               padding: 2,
               borderRadius: 5,
             }}
@@ -689,7 +715,7 @@ const HomeScreen = ({navigation}) => {
           <TouchableOpacity
             style={{
               color: '#fff',
-              backgroundColor: '#57B7EB',
+              backgroundColor: '#005792',
               padding: 2,
               borderRadius: 5,
             }}
@@ -741,7 +767,7 @@ const HomeScreen = ({navigation}) => {
                   <TouchableOpacity
                     style={{
                       color: '#fff',
-                      backgroundColor: '#57B7EB',
+                      backgroundColor: '#005792',
                       padding: 2,
                       borderRadius: 5,
                     }}
@@ -792,7 +818,7 @@ const HomeScreen = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={{color: '#57B7EB'}}>{passenger}</Text>
+            <Text style={{color: '#005792'}}>{passenger}</Text>
             <View
               style={{
                 display: 'flex',
@@ -803,7 +829,7 @@ const HomeScreen = ({navigation}) => {
               <TouchableOpacity
                 style={{
                   color: '#fff',
-                  backgroundColor: '#57B7EB',
+                  backgroundColor: '#005792',
                   padding: 2,
                   borderRadius: 5,
                 }}
@@ -813,7 +839,7 @@ const HomeScreen = ({navigation}) => {
               <TouchableOpacity
                 style={{
                   color: '#fff',
-                  backgroundColor: '#57B7EB',
+                  backgroundColor: '#005792',
                   padding: 2,
                   borderRadius: 5,
                 }}
@@ -864,7 +890,7 @@ const HomeScreen = ({navigation}) => {
                       <TouchableOpacity
                         style={{
                           color: '#fff',
-                          backgroundColor: '#57B7EB',
+                          backgroundColor: '#005792',
                           padding: 2,
                           borderRadius: 5,
                         }}
@@ -905,13 +931,16 @@ const HomeScreen = ({navigation}) => {
       {tripData ? (
         <Box w="90%" m="auto" bg="#f0f8ff" borderRadius="15px" p="10px">
           <>
-            <Text style={{fontWeight: 'bold', fontSize: 14, color: '#57B7EB'}}>
+            <Text
+              style={{fontFamily: 'DMSans', fontSize: 14, color: '#005792'}}>
               Passengers
             </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 14}}>From: {from}</Text>
+            <Text style={{fontFamily: 'DMSans', fontSize: 14}}>
+              From: {from}
+            </Text>
             <Text
               style={{
-                fontWeight: 'bold',
+                fontFamily: 'DMSans',
                 fontSize: 14,
 
                 marginBottom: 10,
@@ -950,7 +979,7 @@ const HomeScreen = ({navigation}) => {
           size="lg"
           style={styles.buttonStyle}
           leftIcon={<Icon name="cog-outline" type="Ionicons" color="white" />}
-          colorScheme="#57B7EB">
+          colorScheme="#005792">
           Offer Ride
         </Button>
         <Button
@@ -958,7 +987,7 @@ const HomeScreen = ({navigation}) => {
           size="lg"
           style={styles.buttonStyle}
           leftIcon={<Icon name="cog-outline" type="Ionicons" color="white" />}
-          colorScheme="#57B7EB">
+          colorScheme="#005792">
           Find Ride
         </Button>
         <Button
@@ -966,7 +995,7 @@ const HomeScreen = ({navigation}) => {
           size="lg"
           style={styles.buttonStyle}
           leftIcon={<Icon name="cog-outline" type="Ionicons" color="white" />}
-          colorScheme="#57B7EB">
+          colorScheme="#005792">
           Sign Out
         </Button>
       </Box> */}
