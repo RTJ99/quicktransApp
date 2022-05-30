@@ -10,6 +10,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import HomeContainer from '../routes/Home/container/HomeContainer';
 import TrackingDriverContainer from '../routes/TrackDriver/container/TrackDriverContainer';
 import PictureCar from '../screens/PictureCar';
+import CometChatUIView from '../screens/ChatScreen';
+import EmergencyContact from '../screens/Emergency';
 import Cars from '../screens/Cars';
 const screenOptions = (route, color) => {
   let iconName;
@@ -57,12 +59,12 @@ const Tabs = () => {
       <Tab.Screen
         options={{headerShown: false}}
         name="Inbox"
-        component={OfferRide}
+        component={CometChatUIView}
       />
       <Tab.Screen
         options={{headerShown: false}}
         name="Emergency"
-        component={TrackingDriverContainer}
+        component={EmergencyContact}
       />
       <Tab.Screen
         options={{headerShown: false}}

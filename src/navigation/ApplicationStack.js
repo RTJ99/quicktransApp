@@ -10,6 +10,7 @@ import Register from '../screens/Register';
 import FindRide from '../screens/FindRide';
 import RideDetails from '../screens/RideDetails';
 import TripDetails from '../screens/TripDetails';
+import Suggested from '../screens/Suggested';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -28,7 +29,8 @@ export default () => {
             headerShown: false,
 
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
           }}
         />
@@ -39,9 +41,10 @@ export default () => {
             headerShown: false,
 
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -51,9 +54,10 @@ export default () => {
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -63,9 +67,10 @@ export default () => {
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -75,9 +80,10 @@ export default () => {
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -87,9 +93,10 @@ export default () => {
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -99,9 +106,10 @@ export default () => {
             headerShown: false,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
           }}
         />
         <Stack.Screen
@@ -111,9 +119,23 @@ export default () => {
             headerShown: true,
             // headerStyle: {backgroundColor: '#161B1D'},
             headerTitleStyle: {
-              color: '#57B7EB',
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
             },
-            headerTintcolor: '#57B7EB',
+            headerTintcolor: '#005792',
+          }}
+        />
+        <Stack.Screen
+          name="Suggested Cars"
+          component={Suggested}
+          options={{
+            headerShown: true,
+            // headerStyle: {backgroundColor: '#161B1D'},
+            headerTitleStyle: {
+              color: '#005792',
+              fontFamily: 'Rubik-Black',
+            },
+            headerTintcolor: '#005792',
           }}
         />
       </Stack.Navigator>

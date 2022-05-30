@@ -17,19 +17,21 @@ import axios from 'axios';
 import {
   AddIcon,
   Box,
-  Input,
   MinusIcon,
   ScrollView,
   TextArea,
   useToast,
   Modal,
   Button,
+  Center,
+  Fab,
+  Input,
   KeyboardAvoidingView,
 } from 'native-base';
 import placeholder from '../assets/img/placeholder-car.png';
 import {preferencesList} from '../constants/preferences';
 import MultiSelect from 'react-native-multiple-select';
-import {Icon} from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {offerRideService} from '../services';
 import ImagePicker from 'react-native-image-picker';
@@ -40,6 +42,7 @@ import {baseUrl} from '../config/baseURL';
 import Wizard from 'react-native-wizard';
 
 const Register = ({navigation}) => {
+  const height = Dimensions.get('window').height;
   const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0;
   const toast = useToast();
   const [username, setUsername] = useState('');
@@ -88,6 +91,7 @@ const Register = ({navigation}) => {
   };
 
   const login = async e => {
+    console.log(data, 'dataaa');
     // e.preventDefault();
     // localStorage.setItem("token", response.tokenObj.id_token);
     setIsLoading(true);
@@ -226,8 +230,8 @@ const Register = ({navigation}) => {
             <Text
               style={{
                 fontSize: 16,
-                color: '#2C3539',
-                fontWeight: 'bold',
+                color: '#005792',
+                fontFamily: 'Rubik-Bold',
                 textAlign: 'center',
                 marginTop: 20,
               }}>
@@ -236,9 +240,11 @@ const Register = ({navigation}) => {
             <Box alignItems="center" style={{marginTop: 20}}>
               <Input
                 placeholder="Name"
+                style={{fontFamily: 'DMSans'}}
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={username => setUsername(username)}
               />
@@ -248,7 +254,8 @@ const Register = ({navigation}) => {
                 placeholder="Email"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={email => setEmail(email)}
               />
@@ -259,7 +266,8 @@ const Register = ({navigation}) => {
                 placeholder="Phone Number"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={phone => setPhone(phone)}
               />
@@ -269,7 +277,8 @@ const Register = ({navigation}) => {
                 placeholder="Address"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={address => setAddress(address)}
               />
@@ -283,7 +292,7 @@ const Register = ({navigation}) => {
         <View style={styles1.page}>
           <View style={[styles1.search1, {marginTop: 120}]}>
             <GooglePlacesAutocomplete
-              placeholder="Ussual Pick Up Location"
+              placeholder="Pick Up Location"
               fetchDetails={true}
               onPress={(data, details = null) => {
                 // 'details' is provided when fetchDetails = true
@@ -294,11 +303,14 @@ const Register = ({navigation}) => {
                 key: 'AIzaSyCOqulxPGaTEOX6sP9TexQlZ7S2mC6KOxs',
                 language: 'en',
               }}
+              textInputProps={{
+                placeholderTextColor: '#BABFC4',
+              }}
               styles={{
                 textInput: {
-                  backgroundColor: '#F8FAFC',
-                  borderColor: '#F1F6FE',
+                  backgroundColor: '#F6F6F6',
 
+                  borderColor: '#233b',
                   borderWidth: 1,
                 },
               }}
@@ -309,14 +321,15 @@ const Register = ({navigation}) => {
             <Text
               style={{
                 fontSize: 16,
-                color: '#2C3539',
-                fontWeight: 'bold',
+                color: '#005792',
+                fontFamily: 'Rubik-Bold',
                 textAlign: 'center',
+                marginBottom: 10,
               }}>
-              Ussuall Drop off Location and Pickup Location{' '}
+              Drop off Location and Pickup Location
             </Text>
             <GooglePlacesAutocomplete
-              placeholder="Ussuall Drop Off Location"
+              placeholder="Drop Off Location"
               fetchDetails={true}
               onTimeout={timeout}
               onPress={(data, details = null) => {
@@ -330,11 +343,13 @@ const Register = ({navigation}) => {
                 language: 'en',
                 components: 'country:zw',
               }}
+              textInputProps={{
+                placeholderTextColor: '#BABFC4',
+              }}
               styles={{
                 textInput: {
-                  backgroundColor: '#F8FAFC',
-                  borderColor: '#F1F6FE',
-
+                  backgroundColor: '#F6F6F6',
+                  borderColor: '#233b',
                   borderWidth: 1,
                 },
               }}
@@ -352,8 +367,8 @@ const Register = ({navigation}) => {
             <Text
               style={{
                 fontSize: 16,
-                color: '#2C3539',
-                fontWeight: 'bold',
+                color: '#005792',
+                fontFamily: 'Rubik-Bold',
                 textAlign: 'center',
                 marginTop: 20,
               }}>
@@ -365,7 +380,8 @@ const Register = ({navigation}) => {
                 placeholder="Emergency Contact Email"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={emergencyContact =>
                   setEmergencyContact(emergencyContact)
@@ -378,7 +394,8 @@ const Register = ({navigation}) => {
                 placeholder="Password"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={password => setPassword(password)}
               />
@@ -389,7 +406,8 @@ const Register = ({navigation}) => {
                 placeholder="Confirm Password"
                 w="320px"
                 maxWidth="300px"
-                variant="underlined"
+                borderColor={'#233b'}
+                borderWidth={1}
                 color="#000"
                 onChangeText={password => setPassword(password)}
               />
@@ -404,45 +422,69 @@ const Register = ({navigation}) => {
           <Text
             style={{
               fontSize: 16,
-              color: '#2C3539',
-              fontWeight: 'bold',
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
               textAlign: 'center',
-              marginTop: 20,
+              marginHorizontal: 20,
+              marginVertical: 6,
             }}>
-            Profile Picture
+            Add your photo for safer smoother pickups
           </Text>
-          <Box
-            alignItems="center"
-            style={[styles.itemsContainer, {marginRight: 5}]}>
+
+          <Box alignItems="center" mt={10} style={{marginRight: 5}}>
+            <Text
+              style={{
+                fontSize: 13,
+                color: '#005792',
+                fontFamily: 'DMSans',
+                textAlign: 'center',
+                marginHorizontal: 20,
+                marginBottom: 4,
+              }}>
+              Driver can only view your photo during pickup and will not be able
+              to access it once the ride is completed
+            </Text>
+
             <TouchableOpacity
-              onPress={handlePickImage}
-              style={[styles.datePicker]}>
-              <Text style={[styles.secondaryTextColor, {fontWeight: 'bold'}]}>
-                Select Picture
+              style={{
+                backgroundColor: '#57B7EB',
+                height: 50,
+
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 30,
+                width: 250,
+              }}
+              onPress={handlePickImage}>
+              <Text
+                style={{
+                  color: '#fff',
+                  width: 200,
+                  textAlign: 'center',
+                  fontFamily: 'DMSans',
+                }}>
+                Click to Select a Picture
               </Text>
             </TouchableOpacity>
             {resourcePath !== 1 ? (
               <Image
                 source={{uri: resourcePath}}
-                style={{width: 280, height: 300}}
+                style={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: 200,
+                  borderWidth: 1,
+                  padding: 4,
+                  borderColor: 'black',
+                  marginTop: 20,
+                }}
               />
             ) : (
-              <PlaceholderCar />
+              <></>
             )}
-          </Box>
-          <Box alignItems="center" style={{marginTop: 20, marginBottom: 20}}>
-            <TouchableOpacity
-              onPress={login}
-              style={[styles.primaryButton, {width: 100}]}>
-              <Text
-                style={{
-                  color: 'white',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                }}>
-                {isLoading ? 'Loading..' : 'Register'}
-              </Text>
-            </TouchableOpacity>
           </Box>
         </ScrollView>
       ),
@@ -450,42 +492,17 @@ const Register = ({navigation}) => {
   ];
 
   return (
-    <View bg="white" h="100%">
-      <View
+    <View bg="white" style={{height: height}}>
+      <Text
         style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          backgroundColor: '#FFF',
-          borderBottomColor: '#dedede',
-          borderBottomWidth: 1,
-          padding: 4,
+          fontFamily: 'DMSans',
+          color: '#233b',
+          marginTop: 10,
+          textAlign: 'center',
         }}>
-        {!isFirstStep && (
-          <Button
-            style={{height: 40}}
-            disabled={isFirstStep}
-            onPress={() => wizard.current.prev()}>
-            <Text style={{color: 'white'}}>Prev</Text>
-          </Button>
-        )}
-        <Text style={{fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>
-          Step {currentStep + 1} of 4
-        </Text>
-        {!isLastStep && (
-          <Button
-            style={{height: 40}}
-            disabled={isLastStep}
-            onPress={() => wizard.current.next()}>
-            <Text style={{color: 'white'}}>Next</Text>
-          </Button>
-        )}
-      </View>
-      <View
-        style={{
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        Step {currentStep + 1} of 4
+      </Text>
+      <View style={{}}>
         <Wizard
           ref={wizard}
           steps={stepList}
@@ -502,6 +519,48 @@ const Register = ({navigation}) => {
           }}
         />
       </View>
+
+      {!isFirstStep && (
+        <Fab
+          disabled={isFirstStep}
+          renderInPortal={false}
+          shadow={2}
+          bg={'#005792'}
+          size="sm"
+          mb={70}
+          placement="bottom-left"
+          onPress={() => wizard.current.prev()}
+          icon={<Icon name="arrowleft" size={20} color="white" />}
+        />
+      )}
+
+      {!isLastStep && (
+        <Fab
+          disabled={isLastStep}
+          renderInPortal={false}
+          shadow={2}
+          size="sm"
+          bg={'#005792'}
+          mb={70}
+          placement="bottom-right"
+          onPress={() => wizard.current.next()}
+          icon={<Icon name="arrowright" size={20} color="white" />}
+        />
+      )}
+      {isLastStep && (
+        <Fab
+          renderInPortal={false}
+          shadow={2}
+          size="md"
+          bg={'#005792'}
+          mb={70}
+          w="150"
+          placement="bottom-right"
+          onPress={login}
+          icon={<Icon name="rocket1" size={20} color="white" />}
+          label={isLoading ? 'Loading...' : 'Register'}
+        />
+      )}
     </View>
   );
 };

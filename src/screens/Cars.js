@@ -94,9 +94,7 @@ const Cars = () => {
     fetchData,
     error: errorsRequests,
     isLoaded: isLoadedRequests,
-  } = useApiRequest(
-    baseUrl + `/offer-ride/search?pickup_point=${from}&drop_off_location=${to}`,
-  );
+  } = useApiRequest(baseUrl + `/offer-ride/`);
   console.log(to, 'to');
   console.log(from, 'from');
   const tokyoRegion = {

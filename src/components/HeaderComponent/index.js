@@ -1,31 +1,55 @@
-import React from "react";
-import { Text, Image } from "react-native";
-import { Header, Left, Body, Right, Button} from "native-base";
-import Icon from "react-native-vector-icons/FontAwesome";
-import styles from "./HeaderComponentStyles";
+import {View, Text, Dimensions} from 'react-native';
+import React from 'react';
+import {HamburgerIcon, Menu, Pressable, Box} from 'native-base';
 
-export const HeaderComponent =  ({logo})=>{
-	return (
-		<Header style={{backgroundColor:"#FF5E3A"}} iosBarStyle="light-content">
-			<Left>
-				<Button transparent>
-					<Icon name="bars" style={styles.icon} />
-				</Button>
-			</Left>
-			<Body>{logo &&
-					<Image resizeMode="contain" style={styles.logo} source={logo}/>
-					||
-					<Text style={styles.headerText}>Driver on the way</Text>
-				}
-			</Body>
+import Icon from 'react-native-vector-icons/Feather';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+const Header = props => {
+  return (
+    <View
+      style={{
+        backgroundColor: '#fff',
+        padding: 3,
+        height: 70,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center',
+        width: Dimensions.get('window').width,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#233b',
+      }}>
+      <Box>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: '#005792',
+            fontSize: 20,
+            fontFamily: 'Rubik-Black',
+          }}>
+          Quick Trans
+        </Text>
+      </Box>
 
-			<Right>
-				<Button transparent>
-					<Icon name="gift" style={styles.icon} />
-				</Button>
-			</Right>
-		</Header>
-	);
-}
+      <Box>
+        <Menu
+          trigger={triggerProps => {
+            return (
+              <Pressable
+                accessibilityLabel="More options menu"
+                {...triggerProps}>
+                <HamburgerIcon color={'#005792'} />
+              </Pressable>
+            );
+          }}>
+          <Menu.Item onPress={props.logout}>Logout</Menu.Item>
+        </Menu>
+      </Box>
+    </View>
+  );
+};
 
-export default HeaderComponent;
+export default Header;

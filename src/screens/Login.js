@@ -18,7 +18,6 @@ import logo from '../assets/logo.png';
 import {
   AddIcon,
   Box,
-  Input,
   MinusIcon,
   ScrollView,
   TextArea,
@@ -31,7 +30,8 @@ import jwt_decode from 'jwt-decode';
 import placeholder from '../assets/img/placeholder-car.png';
 import {preferencesList} from './../constants/preferences';
 import MultiSelect from 'react-native-multiple-select';
-import {Icon} from 'native-base';
+import {Stack, Input} from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {offerRideService} from '../services';
 import ImagePicker from 'react-native-image-picker';
@@ -53,6 +53,7 @@ const Login = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
+  const [show, setShow] = React.useState(false);
   const storeUser = async token => {
     try {
       await AsyncStorage.setItem('token', token);
@@ -150,63 +151,102 @@ const Login = ({navigation}) => {
       <KeyboardAvoidingView
         behavior="position"
         keyboardVerticalOffset={keyboardVerticalOffset}>
-        <View style={{display: 'flex', alignItems: 'center', marginTop: 40}}>
+        <View style={{display: 'flex', alignItems: 'center', marginTop: 60}}>
           <Image
             style={{width: 200, height: 200, margin: 'auto'}}
             source={logo}
           />
         </View>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#57B7EB',
-            textAlign: 'center',
-          }}>
-          Login
-        </Text>
-
-        <Box alignItems="center" style={{marginTop: 20}}>
+        <Stack space={6} w="100%" alignItems="center">
+          <Text
+            style={{
+              fontSize: 16,
+              color: '#005792',
+              fontFamily: 'Rubik-Bold',
+              textAlign: 'center',
+              marginVertical: 20,
+            }}>
+            Login to QuickTrans
+          </Text>
           <Input
-            type="email"
-            placeholder="Email"
-            w="100%"
-            maxWidth="300px"
-            variant="underlined"
-            color="#000"
+            w={{
+              base: '75%',
+              md: '25%',
+            }}
+            rounded={10}
+            px={4}
+            InputLeftElement={<Icon name="user" size={20} color="grey" />}
             onChangeText={username => setUsername(username)}
+            placeholder="Email"
           />
-        </Box>
-
-        <Box alignItems="center" style={{marginTop: 20}}>
           <Input
-            type="password"
+            w={{
+              base: '75%',
+              md: '25%',
+            }}
+            rounded={10}
+            type={show ? 'text' : 'password'}
+            InputLeftElement={<Icon name="lock1" size={20} color="grey" />}
+            InputRightElement={
+              <Icon
+                name={show ? 'eye' : 'eyeo'}
+                size={20}
+                color="grey"
+                onPress={() => setShow(!show)}
+              />
+            }
             placeholder="Password"
-            w="100%"
-            maxWidth="300px"
-            variant="underlined"
-            color="#000"
             onChangeText={password => setPassword(password)}
           />
-        </Box>
-        <Box alignItems="center" style={{marginTop: 20}}>
-          <TouchableOpacity
-            onPress={login}
-            style={[styles.primaryButton, {width: 100}]}>
-            <Text
-              style={{color: 'white', textAlign: 'center', fontWeight: 'bold'}}>
-              Login
-            </Text>
-          </TouchableOpacity>
-          <View style={{display: 'flex', flexDirection: 'row', marginTop: 5}}>
-            <Text style={{marginRight: 5}}>Dont have an account?</Text>
-            <Text
-              onPress={() => navigation.navigate('Register')}
-              style={{color: 'red'}}>
-              Register
-            </Text>
-          </View>
-        </Box>
+          <Box alignItems="center">
+            <TouchableOpacity
+              onPress={login}
+              style={{
+                backgroundColor: '#005792',
+                height: 45,
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+                width: 270,
+              }}>
+              {isLoading ? (
+                <Text
+                  style={{
+                    color: '#fff',
+                    width: 200,
+                    textAlign: 'center',
+                    fontFamily: 'DMSans',
+                  }}>
+                  Loading...
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#fff',
+                    width: 200,
+                    textAlign: 'center',
+                    fontFamily: 'DMSans',
+                  }}>
+                  Login
+                </Text>
+              )}
+            </TouchableOpacity>
+            <View style={{display: 'flex', flexDirection: 'row', marginTop: 5}}>
+              <Text
+                style={{marginRight: 5, color: 'black', fontFamily: 'DMSans'}}>
+                Dont have an account?
+              </Text>
+              <Text
+                onPress={() => navigation.navigate('Register')}
+                style={{color: 'red', fontFamily: 'DMSans'}}>
+                Register
+              </Text>
+            </View>
+          </Box>
+        </Stack>
       </KeyboardAvoidingView>
     </View>
   );
